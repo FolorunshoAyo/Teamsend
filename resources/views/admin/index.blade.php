@@ -1,0 +1,869 @@
+@extends('layouts.admin')
+
+@section('content')
+<section class="section main-section">
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-lg font-semibold">General Report</span>
+      <a href="#" id="see-more-report" class="text-lg text-green-500 flex items-center">
+        <i class="mdi mdi-arrow-down-left mr-2"></i>
+        <span>see more</span>
+      </a>
+    </div>
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Email Contacts</h3>
+              <h1>512</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-account-multiple mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Email Lists</h3>
+              <h1>35</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-email-outline mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Email Campaigns</h3>
+              <h1>10</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-chart-line-variant mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6 hidden" id="more-report">
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Email Templates</h3>
+              <h1>13</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-xml mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Sent Emails</h3>
+              <h1>5</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-email-outline mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>Bounced</h3>
+              <h1>30</h1>
+            </div>
+            <span class="icon widget-icon text-green-500"
+              ><i class="mdi mdi-alert-outline mdi-48px"></i
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-email-fast-outline"></i></span>
+          Sent Mail Report
+        </p>
+        <a href="#" class="card-header-icon">
+          <span class="icon"><i class="mdi mdi-reload"></i></span>
+        </a>
+      </header>
+  
+      <div class="card-content">
+        <div class="chart-area mb-4">
+          <div class="h-full">
+            <div class="chartjs-size-monitor">
+              <div class="chartjs-size-monitor-expand">
+                <div></div>
+              </div>
+              <div class="chartjs-size-monitor-shrink">
+                <div></div>
+              </div>
+            </div>
+            <canvas
+              id="big-line-chart"
+              width="2992"
+              height="1000"
+              class="chartjs-render-monitor block"
+              style="height: 400px; width: 1197px"
+            ></canvas>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <div class="flex">
+            <div>
+              <div
+                class="text-green-500 text-lg xl:text-xl font-bold text-center"
+              >
+                0
+              </div>
+              <div class="text-gray-600">This Month</div>
+            </div>
+            <div
+              class="w-px h-12 border border-r border-dashed border-gray-300 dark:border-dark-5 mx-4 xl:mx-6"
+            ></div>
+            <div>
+              <div
+                class="text-gray-600 text-lg xl:text-xl font-medium text-center"
+              >
+                0
+              </div>
+              <div class="text-gray-600">Last Month</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Campaign Statistics -->
+    <div class="card mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-chart-timeline"></i></span>
+          Campaign Report
+        </p>
+        <a href="#" class="card-header-icon">
+          <span class="icon"><i class="mdi mdi-reload"></i></span>
+        </a>
+      </header>
+  
+      <div class="card-content">
+        <div class="chart-area mb-4">
+          <div class="h-full">
+            <div id="campaign-report-stats"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Limit Report -->
+    <div class="mb-6 flex flex-col sm:flex-row gap-4">
+      <div class="card w-full sm:w-1/2">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-chart-timeline"></i></span>
+            Limit Report
+          </p>
+          <a href="#" class="card-header-icon">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+          </a>
+        </header>
+  
+        <div class="card-content">
+          <div class="chart-area mb-4">
+            <div class="box p-5">
+              <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div>
+                  Total Emails: 100
+                  <br />
+                  Sent Emails: 80
+                  <br />
+                  Available Emails: 20
+                </div>
+  
+                <div>
+                  <div style="position: relative">
+                    <div id="chart-emails-dashboard"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-base text-gray-600 mt-1">Campaign Email Usage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card w-full sm:w-1/2">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-credit-card-outline"></i></span>
+            Payment History
+          </p>
+          <a href="#" class="card-header-icon">
+            <span class="icon"><i class="mdi mdi-reload"></i></span>
+          </a>
+        </header>
+        <div class="card-content">
+          <div class="mt-5">
+            <div class="shadow-sm rounded-sm px-4 py-4 mb-3 flex items-center">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">2</span>
+              </div>
+              <div class="ml-4 mr-auto">
+                <div class="font-medium tooltip">#20237908</div>
+                <div class="font-medium tooltip">MONTHLY</div>
+                <div class="text-gray-600 text-xs tooltip">
+                  2023-11-10 21:10:08
+                </div>
+              </div>
+              <div
+                class="py-1 px-2 rounded-full text-xs cursor-pointer font-medium text-green-600"
+              >
+                PAID
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm px-4 py-4 mb-3 flex items-center">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">1</span>
+              </div>
+              <div class="ml-4 mr-auto">
+                <div class="font-medium tooltip">#20237818</div>
+                <div class="font-medium tooltip">FREE</div>
+                <div class="text-gray-600 text-xs tooltip">
+                  2023-11-07 10:36:13
+                </div>
+              </div>
+              <div
+                class="py-1 px-2 rounded-full text-xs cursor-pointer font-medium tooltip text-green-800"
+              >
+                PAID
+              </div>
+            </div>
+            <a href="#" class="button w-full">View More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="notification blue">
+      <div
+        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0"
+      >
+        <div>
+          <span class="icon"><i class="mdi mdi-buffer"></i></span>
+          <b>Responsive table</b>
+        </div>
+        <button
+          type="button"
+          class="button small textual --jb-notification-dismiss"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  
+    <div class="card has-table mb-6">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+          Weekly Top Senders
+        </p>
+        <a href="#" class="card-header-icon">
+          <span class="icon"><i class="mdi mdi-reload"></i></span>
+        </a>
+      </header>
+      <div class="card-content">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Total Campaigns Created</th>
+              <th>Total Mails Sent</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Adebisi Emmanuel</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #2</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #3</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #4</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #5</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #6</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #7</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #8</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Adebisi Emmanuel</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="image-cell">
+                <div class="image">
+                  <img
+                    src="{{asset('images/avatar.svg')}}"
+                    class="rounded-full"
+                  />
+                </div>
+              </td>
+              <td data-label="Name">Name #9</td>
+              <td data-label="Campaigns Created">5</td>
+              <td data-label="Mails Sent">800</td>
+              <td class="actions-cell">
+                <div class="buttons right nowrap">
+                  <button
+                    class="button small green --jb-modal"
+                    data-target="sample-modal-2"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                  </button>
+                  <button
+                    class="button small red --jb-modal"
+                    data-target="sample-modal"
+                    type="button"
+                  >
+                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="table-pagination">
+          <div class="flex items-center justify-between">
+            <nav class="pagination my-6">
+              <ul>
+                <li>
+                  <a href="#" class="active">Previous</a>
+                </li>
+                <li>
+                  <a href="#">1</a>
+                </li>
+                <li>
+                  <a href="#">2</a>
+                </li>
+                <li>
+                  <a href="#">3</a>
+                </li>
+                <li>
+                  <a href="#" >4</a>
+                </li>
+                <li>
+                  <a href="#">5</a>
+                </li>
+                <li>
+                  <a href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+            <small>Page 1 of 10</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="mb-4">
+      <span class="text-lg font-semibold flex items-center"
+        ><i class="mdi mdi-eye-circle-outline mdi-24px mr-2"></i> Logs</span
+      >
+    </div>
+  
+    <div class="flex flex-col md:flex-row gap-4">
+      <div class="w-full md:w-1/2">
+        <div class="bg-white shadow-sm rounded-sm p-4 flex items-center gap-2">
+          <div class="image w-40">
+            <img
+              src="https://fullaccess.maildoll.com/not_found/mail-not-found.png"
+              class="w-full h-full"
+              alt="Mail Illustration"
+            />
+          </div>
+          <div class="w-full">
+            <p class="mb-4 font-base font-semibold">Mail Logs</p>
+            <a href="#" class="button">View Logs</a>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2">
+        <div class="bg-white shadow-sm rounded-sm p-4 flex items-center gap-2">
+          <div class="image w-40">
+            <img
+              src="https://fullaccess.maildoll.com/not_found/log.png"
+              class="w-full h-full"
+              alt="Mail Illustration"
+            />
+          </div>
+          <div class="w-full">
+            <p class="mb-4">Campaign Logs</p>
+            <a href="#" class="button">View Logs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="flex flex-col md:flex-row gap-4">
+      <div class="w-full md:w-1/2">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">
+              <span class="icon"><i class="mdi mdi-chart-timeline"></i></span>
+              Last Sent Mail
+            </p>
+            <a href="#" class="card-header-icon">
+              <span class="icon"><i class="mdi mdi-reload"></i></span>
+            </a>
+          </header>
+          <div class="card-content">
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">2</span>
+              </div>
+              <div class="w-full">
+                <p class="mb-4 font-base font-semibold">adebisiemmanuel@gmail.com</p>
+                <span class="font-sm">4 November, 2022 </span>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">4</span>
+              </div>
+              <div class="w-full">
+                <p class="mb-4 font-base font-semibold">adebisiemmanuel@gmail.com</p>
+                <span class="font-sm">4 November, 2022 </span>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">3</span>
+              </div>
+              <div class="w-full">
+                <p class="mb-4 font-base font-semibold">adebisiemmanuel@gmail.com</p>
+                <span class="font-sm">4 November, 2022 </span>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">2</span>
+              </div>
+              <div class="w-full">
+                <p class="mb-4 font-base font-semibold">adebisiemmanuel@gmail.com</p>
+                <span class="font-sm">4 November, 2022 </span>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">1</span>
+              </div>
+              <div class="w-full">
+                <p class="mb-4 font-base font-semibold">adebisiemmanuel@gmail.com</p>
+                <span class="font-sm">4 November, 2022 </span>
+              </div>
+            </div>
+            <div class="text-right">
+              <a href="#" class="button">View More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">
+              <span class="icon"><i class="mdi mdi-chart-timeline"></i></span>
+              Last Campaign
+            </p>
+            <a href="#" class="card-header-icon">
+              <span class="icon"><i class="mdi mdi-reload"></i></span>
+            </a>
+          </header>
+          <div class="card-content">
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">4</span>
+              </div>
+              <div class="w-full">
+                <p class="font-base font-semibold">Campaign name</p>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">3</span>
+              </div>
+              <div class="w-full">
+                <p class="font-base font-semibold">Campaign Name</p>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">2</span>
+              </div>
+              <div class="w-full">
+                <p class="font-base font-semibold">Campaign Name</p>
+              </div>
+            </div>
+            <div class="shadow-sm rounded-sm p-4 flex items-center gap-2">
+              <div
+                class="w-10 h-10 flex-none image-fit rounded-md overflow-hidden"
+              >
+                <span class="text-4xl text-green-500">1</span>
+              </div>
+              <div class="w-full">
+                <p class="font-base font-semibold">Campaign Name</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <a href="#" class="button">View More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+@endsection
+
+@section('modals')
+<div id="sample-modal" class="modal">
+    <div class="modal-background --jb-modal-close"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Sample modal</p>
+      </header>
+      <section class="modal-card-body">
+        <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
+        <p>This is sample modal</p>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button --jb-modal-close">Cancel</button>
+        <button class="button red --jb-modal-close">Confirm</button>
+      </footer>
+    </div>
+  </div>
+  
+  <div id="sample-modal-2" class="modal">
+    <div class="modal-background --jb-modal-close"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Sample modal</p>
+      </header>
+      <section class="modal-card-body">
+        <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
+        <p>This is sample modal</p>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button --jb-modal-close">Cancel</button>
+        <button class="button blue --jb-modal-close">Confirm</button>
+      </footer>
+    </div>
+  </div>
+@endsection
+
+@section('page-script')
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.44.0/apexcharts.min.js"></script>
+    <script type="text/javascript" src="{{asset('js/chart.sample.js')}}"></script>
+@endsection

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="@yield('form-screen-class')">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ $title }}</title>
+  @livewireStyles
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <!-- Tailwind is included -->
+  <link rel="stylesheet" href="{{asset('css/main.css')}}">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="https://teamsource.net/wp-content/uploads/2023/05/TeamSource-Favicon.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="https://teamsource.net/wp-content/uploads/2023/05/TeamSource-Favicon.png"/>
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6"/>
+
+  <meta name="description" content="TeamSend - Email Marketing SaaS Application">
+
+  {{-- <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
+  <meta property="og:site_name" content="JustBoil.me">
+  <meta property="og:title" content="TeamSend - Email Marketing SaaS Application">
+  <meta property="og:description" content="TeamSend - Email Marketing SaaS Application">
+  <meta property="og:image" content="https://teamsource.net/wp-content/uploads/2023/05/TeamSource-Logo.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="960">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="TeamSend - Email Marketing SaaS Application">
+  <meta property="twitter:description" content="TeamSend - Email Marketing SaaS Application">
+  <meta property="twitter:image:src" content="https://teamsource.net/wp-content/uploads/2023/05/TeamSource-Logo.png">
+  <meta property="twitter:image:width" content="1920">
+  <meta property="twitter:image:height" content="960"> --}}
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130795909-1"></script> -->
+  <!-- <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-130795909-1');
+  </script> -->
+
+</head>
+<body>
+  <div id="app">
+    @yield('content')
+  </div>
+  @livewireScripts
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+  @yield("action-scripts")
+</body>
+</html>
