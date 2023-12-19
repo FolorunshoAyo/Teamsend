@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 
+@php
+    $organisationId = $organisation->id;
+@endphp
 @section('content')
-    {{-- <livewire:agents-data-table /> --}}
+    <livewire:contacts-data-table :orgId="$organisationId"/>
 @endsection

@@ -30,12 +30,13 @@ class AgentsDataTable extends Component
         $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         })->first();
+
         $orgId = $organisation->id;
         $searchTerm = $this->search;
 
-        $paginator = User::whereDoesntHave('userOrganisations', function ($query) use ($orgId) {
+        $paginator = User::whereHas('userOrganisations', function ($query) use ($orgId) {
             $query->where('org_id', $orgId)
-                ->where('is_admin', 1);
+                ->where('is_admin', "0");
         })
         ->where(function ($query) use ($searchTerm) {
             $query->where('first_name', 'like', '%' . $searchTerm . '%')
@@ -44,6 +45,8 @@ class AgentsDataTable extends Component
         })
         ->orderBy('created_at', 'desc')
         ->paginate($this->perPage);
+
+        // dd($paginator);
 
         return view('livewire.agents-data-table', [
             'agentsData' => $paginator

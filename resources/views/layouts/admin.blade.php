@@ -141,16 +141,16 @@
         <div class="menu is-menu-main">
           <p class="menu-label">General</p>
           <ul class="menu-list">
-            <li class="--set-active-index-html">
+            <li class="{{Route::is('org-admin.dashboard')? "active" : ""}}">
               <a href="{{ route('org-admin.dashboard', ['organisation' => "$reformatted_org_name"]) }}">
-                <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                <span class="icon"><i class="mdi mdi-home-outline"></i></span>
                 <span class="menu-item-label">Dashboard</span>
               </a>
             </li>
           </ul>
           <p class="menu-label">Agents</p>
           <ul class="menu-list">
-            <li class="--set-active-agents-html">
+            <li class="{{Route::is('org-admin.agents')? "active" : ""}}">
               <a href="{{ route('org-admin.agents', ['organisation' => "$reformatted_org_name"]) }}">
                 <span class="icon"><i class="mdi mdi-account-group-outline"></i></span>
                 <span class="menu-item-label">Agents</span>
@@ -159,21 +159,21 @@
           </ul>
           <p class="menu-label">Contacts</p>
           <ul class="menu-list">
-            <li class="--set-active-all-contacts-html --set-active-bulk-upload-html">
+            <li class="{{Route::is('org-admin.contacts') || Route::is('org-admin.bulk-upload')? "active" : ""}}">
               <a class="dropdown">
                 <span class="icon"><i class="mdi mdi-contactless-payment"></i></span>
                 <span class="menu-item-label">Contacts</span>
-                <span class="icon"><i class="mdi mdi---plus-or-minus-contacts"></i></span>
+                <span class="icon"><i class="mdi {{Route::is('org-admin.contacts') || Route::is('org-admin.bulk-upload')? "mdi-minus" : "mdi-plus"}}"></i></span>
               </a>
               <ul>
-                <li class="--set-active-all-contacts-html">
-                  <a href="all-contacts.html">
+                <li class="{{Route::is('org-admin.contacts')? "active" : ""}}">
+                  <a href="{{ route('org-admin.contacts', ['organisation' => "$reformatted_org_name"]) }}">
                     <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                     <span>All Contacts</span>
                   </a>
                 </li>
-                <li class="--set-active-bulk-upload-html">
-                  <a href="bulk-upload.html">
+                <li class="{{Route::is('org-admin.bulk-upload')? "active" : ""}}">
+                  <a href="{{ route('org-admin.bulk-upload', ['organisation' => "$reformatted_org_name"]) }}">
                     <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                     <span>Bulk Import/Export</span>
                   </a>
@@ -183,21 +183,21 @@
           </ul>
           <p class="menu-label">Groups</p>
           <ul class="menu-list">
-            <li class="--set-active-all-groups-html --set-active-new-group-html">
+            <li class="{{Route::is('org-admin.groups') || Route::is('org-admin.new-group')? "active" : ""}}">
               <a class="dropdown">
                 <span class="icon"><i class="mdi mdi-account-group"></i></span>
                 <span class="menu-item-label">Groups</span>
-                <span class="icon"><i class="mdi mdi---plus-or-minus-groups"></i></span>
+                <span class="icon"><i class="mdi {{Route::is('org-admin.groups') || Route::is('org-admin.new-group')? "mdi-minus" : "mdi-plus"}}"></i></span>
               </a>
               <ul>
-                <li class="--set-active-all-groups-html">
-                  <a href="all-groups.html">
+                <li class="{{Route::is('org-admin.groups')? "active" : ""}}">
+                  <a href="{{ route('org-admin.groups', ['organisation' => "$reformatted_org_name"]) }}">
                     <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                     <span>All Groups</span>
                   </a>
                 </li>
-                <li class="--set-active-new-group-html">
-                  <a href="new-group.html">
+                <li class="{{Route::is('org-admin.new-group')? "active" : ""}}">
+                  <a href="{{ route('org-admin.new-group', ['organisation' => "$reformatted_org_name"]) }}">
                     <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                     <span>Add New</span>
                   </a>
@@ -350,7 +350,7 @@
             </div>
           </div>
           <a href="https://teamsource.net" style="width: 100px;">
-            <img src="https://teamsource.net/wp-content/uploads/2023/05/TeamSource-Logo.png">
+            <img src="{{asset('images/teamsource-logo.png')}}">
           </a>
         </div>
       </footer>
@@ -367,6 +367,6 @@
     <!-- Page Specific Scripts -->
     @yield('page-script')
     <!-- End Page Specific Scripts -->
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css">
 </body>
 </html>

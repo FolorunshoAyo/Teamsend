@@ -31,4 +31,9 @@ class UserOrganisation extends Model
     {
         return $this->hasMany(Contact::class, 'user_org_id');
     }
+
+    public function lists()
+    {
+        return $this->hasMany(Lists::class, 'user_org_id');
+    }
 }

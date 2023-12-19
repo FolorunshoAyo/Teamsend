@@ -13,8 +13,10 @@ class Contact extends Model
         'first_name',
         'last_name',
         'email',
+        'phone',
+        'country_code',
         'is_subscribed',
-        'is_blacklisted',
+        'is_blocked',
         'is_favourite',
         'is_trashed',
         'user_org_id',
@@ -33,5 +35,10 @@ class Contact extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_org_id', 'org_id');
+    }
+
+    public function lists()
+    {
+        return $this->belongsToMany(Lists::class, 'lists_contacts', 'contact_id', 'list_id');
     }
 }

@@ -117,16 +117,16 @@
         @livewire('agent-create-modal')
     @endif
 </section>
-  @script
-    <script>
-      $wire.on('notifyUpdatedAgent', () => {
-        toastr.success("Agent Updated Successfully", "Success");
-      });
-      $wire.on('notifyNewAgent', () => {
-        toastr.success("New Agent Added Successfully", "Success");
-      }); 
-      $wire.on('tableRefreshed', () => {
-        toastr.success("Table refreshed successfully", "Success");
-      });
-    </script>
-  @endscript
+@script
+  <script>
+    $wire.on('notifyUpdatedAgent', () => {
+      toastr.success("Agent Updated Successfully", "Success");
+    });
+    $wire.on('notifyNewAgent', () => {
+      toastr.success("New Agent Added Successfully", "Success");
+    }); 
+    $wire.on('tableRefreshed', () => {
+      toastr.success("Table refreshed successfully", "Success");
+    });
+  </script>
+@endscript

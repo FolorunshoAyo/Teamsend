@@ -172,6 +172,54 @@ Route::name('org-admin.')->group(function () {
         })
         ->name('contacts');
 
+        Route::get('{organisation}/admin/contacts/bulk-upload', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.bulk-upload', [
+                "pageTitle" => "Bulk Upload - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Bulk Upload",
+                "pageLinkTitle" => "Bulk Upload",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('bulk-upload');
+
+        Route::get('{organisation}/admin/groups', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.groups', [
+                "pageTitle" => "Contact Groups - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Contact Groups",
+                "pageLinkTitle" => "Contact Groups",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('groups');
+
+        Route::get('{organisation}/admin/group/new', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.new-group', [
+                "pageTitle" => "New Contact Group - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "New Contact Group",
+                "pageLinkTitle" => "New Contact Group",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('new-group');
+
     });
 });
 
