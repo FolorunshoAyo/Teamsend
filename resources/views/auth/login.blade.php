@@ -45,10 +45,6 @@
 @endsection
 
 @section('action-scripts')
-  <!-- JQUERY -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <!-- Toastr -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
   @if (session('success'))
     <script>
       $(document).ready(function () {

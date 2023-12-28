@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Agents;
 
-use App\Models\User;
 use Livewire\Component;
 
 class AgentEditModal extends Component
@@ -46,6 +45,6 @@ class AgentEditModal extends Component
 
     public function render()
     {
-        return view('livewire.agent-edit-modal');
+        return view('livewire.agents.agent-edit-modal');
     }
 }

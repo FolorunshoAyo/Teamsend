@@ -109,12 +109,12 @@
     @endif
     <!-- Edit Modal -->
     @if ($modalVisible)
-      @livewire('agent-edit-modal', ['agent' => $selectedAgent])
+      @livewire('agents.agent-edit-modal', ['agent' => $selectedAgent])
     @endif
 
     <!-- Create Modal -->
     @if ($createModalVisible)
-        @livewire('agent-create-modal')
+        @livewire('agents.agent-create-modal')
     @endif
 </section>
 @script

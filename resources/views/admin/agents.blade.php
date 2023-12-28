@@ -1,5 +1,5 @@
 @extends('layouts.admin')
 
 @section('content')
-    <livewire:agents-data-table />
+    <livewire:agents.agents-data-table />
 @endsection

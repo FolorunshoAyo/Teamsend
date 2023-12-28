@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Contacts;
 
 use App\Models\Contact;
 use Livewire\Component;
@@ -47,7 +47,9 @@ class ContactCreateModal extends Component
 
         $user = Auth::user();
 
-        $user_org_id = UserOrganisation::where('user_id', $user->id)->first();
+        $user_org_id = UserOrganisation::where('user_id', $user->id)
+        ->where('org_id', $this->org_id)
+        ->first();
 
         Contact::create([
             'user_org_id' => $user_org_id->id,
@@ -71,6 +73,6 @@ class ContactCreateModal extends Component
     
     public function render()
     {
-        return view('livewire.contact-create-modal');
+        return view('livewire.contacts.contact-create-modal');
     }
 }

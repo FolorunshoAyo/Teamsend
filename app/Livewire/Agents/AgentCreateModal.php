@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Agents;
 
 use App\Models\User;
 use Livewire\Component;
@@ -87,6 +87,6 @@ class AgentCreateModal extends Component
 
     public function render()
     {
-        return view('livewire.agent-create-modal');
+        return view('livewire.agents.agent-create-modal');
     }
 }

@@ -4,5 +4,5 @@
     $organisationId = $organisation->id;
 @endphp
 @section('content')
-    <livewire:contacts-data-table :orgId="$organisationId"/>
+    <livewire:contacts.contacts-data-table :orgId="$organisationId"/>
 @endsection

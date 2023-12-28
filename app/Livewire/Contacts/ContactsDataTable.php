@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Contacts;
 
 use App\Models\Contact;
 use Livewire\Component;
@@ -32,20 +32,12 @@ class ContactsDataTable extends Component
     }
 
     protected $listeners = [
-        'getSelectedAndAllContacts' => 'getSelectedAndAllContacts',
-        'updateCollatedContacts' => 'updateCollatedContacts',
         'contactUpdated' => 'refreshTable'
     ];
 
     public function render()
     {
-        $user_id = $this->user_id;
-
-        $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        })->first();
-
-        $orgId = $organisation->id;
+        $orgId = $this->org_id;
         $searchTerm = $this->search;
 
         $contacts = "";         
@@ -108,122 +100,68 @@ class ContactsDataTable extends Component
             ->paginate($this->perPage);
         }
 
-        return view('livewire.contacts-data-table', [
+        return view('livewire.contacts.contacts-data-table', [
             'contacts' => $contacts
         ]);
     }
 
-    public function getSelectedAndAllContacts(){
-        $user_id = $this->user_id;
-
-        $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        })->first();
-
-        $orgId = $organisation->id;
-        $searchTerm = $this->search;
-
-        $allContacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+    public function updateSelectedContacts()
+    {
+        $orgId = $this->org_id;
+        
+        $arrayOfContacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
             $query->where('org_id', $orgId);
-        })
-        ->where(function ($query) use ($searchTerm) {
-            $query->where('first_name', 'like', '%' . $searchTerm . '%')
-                ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
-                ->orWhere('email', 'like', '%' . $searchTerm . '%');
         })
         ->with('userOrganisation.user')
         ->orderBy('created_at', 'desc')
         ->pluck('id')
         ->toArray();
 
-        // Sending selected contacts to frontend through javascript
-        $this->dispatch("sendSelectedAndAllContacts", [
-            'selectedContacts' => $this->selectedContacts,
-            'allContacts' => $allContacts
-        ]);
+        $this->updateDataTableState($arrayOfContacts);
     }
 
-    public function updateCollatedContacts($selectedContacts, $selectAll){
-        $this->selectedContacts = $selectedContacts;
-        $this->selectAll = $selectAll;
+    public function updateDataTableState($contacts){
+        if(count($this->selectedContacts) === 0){
+            $this->selectAll = false;
+        }else{
+            sort($this->selectedContacts);
+            sort($contacts);
+
+            if (empty(array_diff($this->selectedContacts, $contacts)) && empty(array_diff($contacts, $this->selectedContacts))) {
+                $this->selectAll = true;
+            }else{
+                $this->selectAll = false;
+            }
+        }
+
+        if($this->selectAll === true){
+            $this->selectedContacts = $contacts;
+        }
     }
 
-    // public function toggleSelectContact($contactId){
-    //     $this->dispatch('actionDoneOnDataTable');
+    public function toggleSelectAll(){
+        // $this->dispatch('actionDoneOnDataTable');
 
-    //     if(!in_array($contactId, $this->selectedContacts)){
-    //         $this->selectedContacts = array_merge($this->selectedContacts, [$contactId]);
-    //     }else{
-    //         $this->selectedContacts = array_diff($this->selectedContacts, [$contactId]);
-    //     }
+        $this->selectAll = !$this->selectAll;
 
-    //     $user_id = $this->user_id;
-
-    //     $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($user_id) {
-    //         $query->where('user_id', $user_id);
-    //     })->first();
+        $orgId = $this->org_id;
         
-    //     $orgId = $organisation->id;
+        $arrayOfContacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })
+        ->with('userOrganisation.user')
+        ->orderBy('created_at', 'desc')
+        ->pluck('id')
+        ->toArray();
 
-    //     $arrayOfContacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
-    //         $query->where('org_id', $orgId);
-    //     })
-    //     ->with('userOrganisation.user')
-    //     ->orderBy('created_at', 'desc')
-    //     ->pluck('id')
-    //     ->toArray();
+        if($this->selectAll === true){
+            $this->selectedContacts = $arrayOfContacts;
+        } else {
+            $this->selectedContacts = [];
+        }
 
-    //     $this->updateDataTableState($arrayOfContacts);
-    // }
-
-    // public function updateDataTableState($contacts){
-    //     if(count($this->selectedContacts) === 0){
-    //         $this->selectAll = false;
-    //     }else{
-    //         sort($this->selectedContacts);
-    //         sort($contacts);
-
-    //         if (empty(array_diff($this->selectedContacts, $contacts)) && empty(array_diff($contacts, $this->selectedContacts))) {
-    //             $this->selectAll = true;
-    //         }else{
-    //             $this->selectAll = false;
-    //         }
-    //     }
-
-    //     if($this->selectAll === true){
-    //         $this->selectedContacts = $contacts;
-    //     }
-    // }
-
-    // public function toggleSelectAll(){
-    //     $this->dispatch('actionDoneOnDataTable');
-
-    //     $this->selectAll = !$this->selectAll;
-
-    //     $user_id = $this->user_id;
-
-    //     $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($user_id) {
-    //         $query->where('user_id', $user_id);
-    //     })->first();
-        
-    //     $orgId = $organisation->id;
-        
-    //     $arrayOfContacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
-    //         $query->where('org_id', $orgId);
-    //     })
-    //     ->with('userOrganisation.user')
-    //     ->orderBy('created_at', 'desc')
-    //     ->pluck('id')
-    //     ->toArray();
-
-    //     if($this->selectAll === true){
-    //         $this->selectedContacts = $arrayOfContacts;
-    //     } else {
-    //         $this->selectedContacts = [];
-    //     }
-
-    //     $this->updateDataTableState($arrayOfContacts);
-    // }
+        $this->updateDataTableState($arrayOfContacts);
+    }
 
     public function setToFavourite($contactId){
         $orgId = $this->org_id;
@@ -237,8 +175,11 @@ class ContactsDataTable extends Component
         if($contact){
             if($contact->is_favourite == "1"){
                 $contact->is_favourite = "0";
+
+                $this->dispatch("tableSuccess", message: "Contact removed from favourites");
             }else{
                 $contact->is_favourite = "1";
+                $this->dispatch("tableSuccess", message: "Contact added to favourite");
             } 
     
             $contact->save();
@@ -250,13 +191,11 @@ class ContactsDataTable extends Component
     }
 
     public function addSelectedTo($destination){
-        $this->dispatch("actionDoneOnDataTable");
+        // $this->dispatch("actionDoneOnDataTable");
 
         $column_to_update = "is_$destination";
 
         if($column_to_update === "is_favourite" || $column_to_update === "is_trashed" || $column_to_update === "is_blocked"){
-
-            dd($this->selectedContacts);
             
             if(count($this->selectedContacts) > 0){
                 foreach ($this->selectedContacts as $contactId) {
@@ -276,8 +215,9 @@ class ContactsDataTable extends Component
                         return;
                     }
                 }
-                
+
                 $this->refreshTable();
+                $this->dispatch("tableSuccess", message: "Selected contacts added to favourites");
             }else{
                 $this->dispatch("tableError", message: "No selection was made");
             }
@@ -286,14 +226,12 @@ class ContactsDataTable extends Component
         }
     }
 
-    public function removeSelectedFrom($destination){
-        $this->dispatch("actionDoneOnDataTable");
+    public function removeSelectedFrom($destination){   
+        // $this->dispatch("actionDoneOnDataTable");
 
         $column_to_update = "is_$destination";
 
         if($column_to_update === "is_favourite" || $column_to_update === "is_trashed" || $column_to_update === "is_blocked"){
-            dd($this->selectedContacts);
-
             if(count($this->selectedContacts) > 0){
                 foreach ($this->selectedContacts as $contactId) {
                     $orgId = $this->org_id;
@@ -314,6 +252,7 @@ class ContactsDataTable extends Component
                 }
 
                 $this->refreshTable();
+                $this->dispatch("tableSuccess", message: "Selected contacts removed to favourites");
             }else{
                 $this->dispatch("tableError", message: "No selection was made");
             }
@@ -337,7 +276,6 @@ class ContactsDataTable extends Component
     {
         $this->modalVisible = false;
         $this->createModalVisible = false;
-        $this->dispatch("tableSuccess", message: "Table Refreshed Successfully!");
     }
 
     // public function refresh()
@@ -359,8 +297,6 @@ class ContactsDataTable extends Component
 
     public function applyFilter($status)
     {
-        $this->dispatch("actionDoneOnDataTable");
-
         if($status === "blocked"){
             $this->is_blocked = "1";
             $this->activeFilter = "blocked";
@@ -375,8 +311,6 @@ class ContactsDataTable extends Component
 
     public function clearFilter()
     {
-        $this->dispatch("actionDoneOnDataTable");
-
         $this->is_blocked = "0";
         $this->is_favourite = "0";
         $this->is_trashed = "0";

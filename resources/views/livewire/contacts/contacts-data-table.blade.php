@@ -54,12 +54,17 @@
                     <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
                     All Contacts
                 </p>
-                <div class="tools inline-flex items-center space-x-2">
-                    @if (count($selectedContacts) > 0)
-                        <p class="ml-2 flex items-center p-2">
-                            <span class="text-green-500">Selected: <span>{{ count($selectedContacts) }}</span>
+                <div class="tools inline-flex relative items-center space-x-2">
+                    {{-- <div id="loading-overlay" class="absolute top-0 right-0 w-full h-full bg-black opacity-5 z-50" style="display: none;"></div> --}}
+                    {{-- <p id="contacts-count" class="ml-2 flex items-center p-2" style="display: {{count($selectedContacts) > 0? 'block' : 'none'}}">
+                        <span class="text-green-500">Selected: <span>{{ count($selectedContacts) }}</span>
                                 contact(s)</span>
-                        </p>
+                    </p> --}}
+                    @if (count($selectedContacts) > 0)
+                    <p class="ml-2 flex items-center p-2">
+                        <span class="text-green-500">Selected: <span>{{ count($selectedContacts) }}</span>
+                                contact(s)</span>
+                    </p>
                     @endif
                     <span class="font-semibold">Show:</span>
                     <div class="control">
@@ -101,7 +106,7 @@
                     </button>
                 </div>
                 <p class="ml-2 flex items-center p-2">
-                    <span class="text-green-500">Total: <span id="email-count">{{ count($contacts) }}</span>
+                    <span class="text-green-500">Total: <span>{{ count($contacts) }}</span>
                         contact(s)</span>
                 </p>
             </header>
@@ -110,17 +115,10 @@
                     <thead>
                         <tr>
                             <th class="checkbox-cell">
-                        {{-- wire:click="toggleSelectAll     --}}
-                                <div id="select-all"
-                                    class="data-table-custom-checkbox {{ $selectAll === false ? '' : 'active' }}">
-                                    @if ($selectAll)
-                                        <span class="check-icon mdi mdi-check-bold text-white"></span>
-                                    @endif
-                                </div>
-                                {{-- <label class="checkbox">
-                    <input type="checkbox" {{$selectAll === false? "" : "checked"}}>
-                    <span class="check" wire:click="toggleSelectAll"></span>
-                    </label> --}}
+                                <label class="checkbox" wire:click="toggleSelectAll">
+                                    <input type="checkbox" wire:model="selectAll">
+                                    <span class="check"></span>
+                                </label>
                             </th>
                             <th class="image-cell"></th>
                             <th>User</th>
@@ -137,17 +135,10 @@
                         @foreach ($contacts as $contact)
                             <tr>
                                 <td class="checkbox-cell">
-                                    {{-- wire:click="toggleSelectContact({{ $contact->id }})" --}}
-                                    <div data-contact-id="{{ $contact->id }}"
-                                        class="data-table-custom-checkbox {{ in_array($contact->id, $selectedContacts) ? 'active' : '' }}">
-                                        @if (in_array($contact->id, $selectedContacts))
-                                            <span class="check-icon mdi mdi-check-bold text-white"></span>
-                                        @endif
-                                    </div>
-                                    {{-- <label class="checkbox">
-                        <input type="checkbox" {{ in_array($contact->id, $selectedContacts)? "checked" : "" }}>
-                        <span class="check" wire:click="toggleSelectContact({{ $contact->id }})"></span>
-                        </label> --}}
+                                    <label class="checkbox" wire:click="updateSelectedContacts">
+                                        <input type="checkbox" wire:model="selectedContacts" value="{{ $contact->id }}">
+                                        <span class="check"></span>
+                                    </label>
                                 </td>
                                 <td class="image-cell">
                                     <div class="image">
@@ -184,19 +175,18 @@
     @endif
     <!-- Edit Modal -->
     @if ($modalVisible)
-        @livewire('contact-edit-modal', ['contact' => $selectedContact, 'orgId' => $org_id])
+        @livewire('contacts.contact-edit-modal', ['contact' => $selectedContact, 'orgId' => $org_id])
     @endif
 
     <!-- Create Modal -->
     @if ($createModalVisible)
-        @livewire('contact-create-modal', ['orgId' => $org_id])
+        @livewire('contacts.contact-create-modal', ['orgId' => $org_id])
     @endif
 </section>
 @script
     <script>
-        $wire.dispatch('getSelectedAndAllContacts');
-
         $wire.on('tableSuccess', (event) => {
+            console.log(event);
             toastr.success(event.message, "Success");
         });
         $wire.on('tableRefreshed', () => {
@@ -204,128 +194,7 @@
         });
 
         $wire.on('tableError', (event) => {
-            toastr.error(event.details.message, "Error");
+            toastr.error(event.message, "Error");
         });
     </script>
 @endscript
-
-@section('page-script')
-<script>
-    // Storing selected and all organisation contacts
-    let selectedContacts = [];
-    let allContacts = [];
-    let selectAll = false;
-    let loadingBackgroundData = true;
-
-    // Select All checkbox
-    const selectAllCheckbox = document.querySelector("#select-all");
-
-    // Checkbox functionality
-    document.querySelectorAll(".data-table-custom-checkbox").forEach(checkbox => {
-        checkbox.addEventListener("click", handleClick);
-    });
-
-    function handleClick (e) {
-        if(loadingBackgroundData !== true){
-            const checkbox = e.currentTarget;
-
-            if(checkbox.id === "select-all"){
-                if(checkbox.classList.contains('active')){
-                    selectedContacts = [];
-
-                    // Removed all checked records
-                    document.querySelectorAll(".data-table-custom-checkbox").forEach(selectedContact => {
-                        selectedContact.classList.remove("active");
-                        selectedContact.innerHTML = "";
-                    });
-
-                }else{
-                    selectedContacts = [...allContacts];
-
-                    updateDataTableState();
-                }   
-            }else{
-                const contact_id = Number(checkbox.dataset.contactId);
-
-                if(checkbox.classList.contains('active')){
-                    // is activated
-                    let index = selectedContacts.indexOf(contact_id);
-
-                    if (index !== -1) {
-                        selectedContacts.splice(index, 1);
-
-                        console.log(`Removed ${contact_id} from the selected list.`);
-
-                        checkbox.classList.remove('active');
-                        checkbox.innerHTML = "";
-                    }else{
-                        console.log(`${contact_id} not found in the selected list.`);
-                    }
-                }else{
-                    selectedContacts.push(contact_id);
-
-                    checkbox.classList.add("active");
-
-                    checkbox.innerHTML = "<span class='mdi mdi-check-bold text-white'></span>";
-                }
-
-                updateDataTableState();
-            }
-        }else{
-            return;
-        }
-    }
-
-    function updateDataTableState(){
-        if(arraysEqualSorted(selectedContacts, allContacts)){
-            selectAll = true;
-            selectAllCheckbox.classList.add("active");
-            selectAllCheckbox.innerHTML = "<span class='mdi mdi-check-bold text-white'></span>";
-        }else{
-            selectAll = false;
-            selectAllCheckbox.classList.remove("active");
-            selectAllCheckbox.innerHTML = "";
-        }
-
-        if(selectAll === true){
-            selectedContacts = [...allContacts];
-        }
-
-        updateDataTable();
-    }
-
-    function updateDataTable(){
-        selectedContacts.forEach(selectedContact => {
-            const selectedContactEl = document.querySelector(`.data-table-custom-checkbox[data-contact-id="${selectedContact}"]`);
-
-            // Update checkbox state from the dom
-            if(!selectedContactEl.classList.contains("active")){
-                selectedContactEl.classList.add("active");
-                selectedContactEl.innerHTML = "<span class='mdi mdi-check-bold text-white'></span>";
-            }
-            
-        });
-    }
-
-    function arraysEqualSorted(a, b) {
-        const sortedA = [...a].sort();
-        const sortedB = [...b].sort();
-
-        return JSON.stringify(sortedA) === JSON.stringify(sortedB);
-    }
-
-    // Code for working with the checkboxes
-    document.addEventListener('livewire:init', function () {
-        Livewire.on('sendSelectedAndAllContacts', function (data) {
-            loadingBackgroundData = false;
-            allContacts = data[0].allContacts;
-            selectedContacts = data[0].selectedContacts;
-        });
-
-        Livewire.on('actionDoneOnDataTable', function(){
-            // Send collated selectedCOntacts
-            $wire.dispatch('updateCollatedContacts', { selectedContacts, selectAll });
-        });
-    });
-</script>
-@endsection

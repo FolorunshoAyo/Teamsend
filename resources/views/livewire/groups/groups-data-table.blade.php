@@ -1,18 +1,18 @@
 <section class="section main-section">
     <div class="p-6 bg-white shadow-sm rounded-sm">
         <div class="my-6 flex flex-col items-center sm:justify-between sm:flex-row gap-4">
-            <a class="button" href="{{ route('org-admin.new-group', ['organisation' => "$reformatted_org_name"]) }}">
+            <a class="button" href="{{ route('org-admin.new-group', ['organisation' => "$org_name"]) }}">
                 <i class="mdi mdi-plus"></i>
                 Add New Group
             </a>
             <div class="field">
                 <div class="control icons-left">
-                    <input class="input" type="text" placeholder="Search Groups....">
+                    <input class="input" type="text" wire:model.live.debounce.300ms="search" placeholder="Search Groups....">
                     <span class="icon left"><i class="mdi mdi-magnify mdi-24px"></i></span>
                 </div>
             </div>
         </div>
-        @if ($contacts->isEmpty())
+        @if ($groups->isEmpty())
             <div class="card empty">
                 <div class="card-content">
                     <div>
@@ -24,7 +24,10 @@
                 </div>
                 <hr />
                 <div class="text-end p-4">
-                    <button class="button w-1/4 md:w-1/2"  wire:click="createContact">Add New Contact</button>
+                    <a class="button w-1/4 md:w-1/2"  href="{{ route('org-admin.new-group', ['organisation' => "$org_name"]) }}">
+                        <i class="mdi mdi-plus"></i>
+                        Add New Group
+                    </a>
                 </div>
             </div>
         @else
@@ -39,9 +42,10 @@
                         <div class="control">
                             <div class="select">
                                 <select wire:model.change="perPage" id="perPage">
-                                    <option>25</option>
-                                    <option>50</option>
-                                    <option>100</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
                                 </select>
                             </div>
                         </div>
@@ -58,79 +62,63 @@
                             <tr>
                                 <th></th>
                                 <th>Group Name</th>
-                                <th>Contacts</th>
+                                <th>Contacts Count</th>
                                 <th>Status</th>
-                                <th>Created</th>
+                                <th>Created By</th>
+                                <th>Created At</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $user = Auth::user();
+                            @endphp
+                            @foreach ($groups as $group)
                             <tr>
                                 <td class="image-cell">
                                     <div class="image">
-                                        <img src="img/avatar.svg" class="rounded-full" />
+                                        <img src="{{ asset('images/avatar.svg') }}" class="rounded-full" />
                                     </div>
                                 </td>
                                 <td data-label="Group Name">
                                     <a class="font-medium whitespace-no-wrap inline-block" href="javascript:void(0)">
-                                        Group Name
+                                        {{ $group->list_name }}
                                     </a>
-                                    <p>Some Desc</p>
+                                    @if ($group->list_description)
+                                        <p>{{ $group->list_description }}</p>
+                                    @endif
                                 </td>
-                                <td data-label="Contacts">20</td>
-                                <td data-label="Status">
-                                    <div class="flex items-center text-red-600">
-                                        <i class="mdi mdi-close-box-multiple-outline"></i> Inactive
-                                    </div>
-                                </td>
-                                <td data-label="Created">3 days ago</td>
-                                <td class="actions-cell">
-                                    <div class="buttons right nowrap">
-                                        <a class="button green" href="javascript:void(0)">
-                                            <span class="icon"><i class="mdi mdi-eye mdi-24px"></i></span>
-                                        </a>
-                                        <a class="button yellow" href="javscript:void(0)">
-                                            <span class="icon"><i class="mdi mdi-square-edit-outline mdi-24px"></i></span>
-                                        </a>
-                                        <a class="button red" href="javscript:void(0)">
-                                            <span class="icon"><i class="mdi mdi-trash-can mdi-24px"></i></span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="image-cell">
-                                    <div class="image">
-                                        <img src="img/avatar.svg" class="rounded-full" />
-                                    </div>
-                                </td>
-                                <td data-label="Group Name">
-                                    <a class="font-medium whitespace-no-wrap inline-block" href="javascript:void(0)">
-                                        Group Name
-                                    </a>
-                                    <p>Some Desc</p>
-                                </td>
-                                <td data-label="Contacts">20</td>
+                                <td data-label="Contacts Count">{{ count($group->contacts) }}</td>
                                 <td data-label="Status">
                                     <div class="flex items-center text-green-600">
+                                        @if($group->active)
                                         <i class="mdi mdi-checkbox-multiple-outline"></i> Active
+                                        @else
+                                        <i class="mdi mdi-close-box-multiple-outline"></i> Inactive
+                                        @endif
                                     </div>
                                 </td>
-                                <td data-label="Created">3 days ago</td>
+                                <td data-label="Created By">
+                                    {{ $group->userOrganisation->user->id !== $user->id ? $group->userOrganisation->user->first_name . ' ' . $group->userOrganisation->user->last_name : 'Me' }}
+                                </td>
+                                <td data-label="Created At">
+                                    {{$group->created_at->diffForHumans()}}
+                                </td>
                                 <td class="actions-cell">
                                     <div class="buttons right nowrap">
-                                        <a class="button green" href="javascript:void(0)">
+                                        <a class="button green" href="{{ route('org-admin.view-group', ['organisation' => "$org_name", 'id' => "$group->id"]) }}">
                                             <span class="icon"><i class="mdi mdi-eye mdi-24px"></i></span>
                                         </a>
-                                        <a class="button yellow" href="javscript:void(0)">
+                                        <a class="button yellow" href="{{ route('org-admin.edit-group', ['organisation' => "$org_name", 'id' => "$group->id"]) }}">
                                             <span class="icon"><i class="mdi mdi-square-edit-outline mdi-24px"></i></span>
                                         </a>
-                                        <a class="button red" href="javscript:void(0)">
+                                        <button class="button red" href="javscript:void(0)">
                                             <span class="icon"><i class="mdi mdi-trash-can mdi-24px"></i></span>
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                     <!-- Table pagination -->

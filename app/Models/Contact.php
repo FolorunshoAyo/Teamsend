@@ -39,6 +39,7 @@ class Contact extends Model
 
     public function lists()
     {
-        return $this->belongsToMany(Lists::class, 'lists_contacts', 'contact_id', 'list_id');
+        return $this->belongsToMany(Lists::class, 'lists_contacts', 'contact_id', 'list_id')
+        ->withTimestamps();
     }
 }

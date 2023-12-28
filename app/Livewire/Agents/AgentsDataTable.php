@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Agents;
 
 use App\Models\User;
 use Livewire\Component;
@@ -48,7 +48,7 @@ class AgentsDataTable extends Component
 
         // dd($paginator);
 
-        return view('livewire.agents-data-table', [
+        return view('livewire.agents.agents-data-table', [
             'agentsData' => $paginator
         ]);
     }

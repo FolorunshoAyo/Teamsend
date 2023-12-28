@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\Logout;
+use App\Models\Lists;
+use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -219,6 +221,79 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('new-group');
+
+    
+        Route::get('{organisation}/admin/group/{id}', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+            $urlOrgName = $request->route("organisation");
+            $groupId = $request->route('id');
+
+            // Check if user is allowed to edit this group
+            $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($currUser) {
+                $query->where('user_id', $currUser->id);
+            })->first();                
+
+            $orgId = $organisation->id;
+
+            $list = Lists::whereHas('userOrganisation', function ($query) use ($orgId) {
+                $query->where('org_id', $orgId);
+            })->where('id', $groupId)->first();
+
+            $organisation_name = $organisation->name;
+
+            if($list){
+                return view('admin.view-group', [
+                    "pageTitle" => "Group Details - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "Group Details",
+                    "pageLinkTitle" => "Group Details",
+                    "organisation" => $organisation,
+                    "user" => $currUser,
+                    "selectedGroup" => $list
+                ]);
+            }else{
+                // redirect to groups
+                return redirect("/$urlOrgName/admin/groups");
+            }
+        })
+        ->name('view-group');
+
+        Route::get('{organisation}/admin/group/edit/{id}', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+            $urlOrgName = $request->route("organisation");
+            $groupId = $request->route('id');
+
+            // Check if user is allowed to edit this group
+            $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($currUser) {
+                $query->where('user_id', $currUser->id);
+            })->first();                
+
+            $orgId = $organisation->id;
+
+            $hasList = Lists::whereHas('userOrganisation', function ($query) use ($orgId) {
+                $query->where('org_id', $orgId);
+            })->where('id', $groupId)->exists();
+
+            $organisation_name = $organisation->name;
+
+            if($hasList){
+                $list = Lists::find($groupId);
+
+                return view('admin.edit-group', [
+                    "pageTitle" => "Edit Contact Group - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "Edit Contact Group",
+                    "pageLinkTitle" => "Edit Contact Group",
+                    "organisation" => $organisation,
+                    "user" => $currUser,
+                    "groupDetails" => $list,
+                ]);
+            }else{
+                // redirect to groups
+                return redirect("/$urlOrgName/admin/groups");
+            }
+        })
+        ->name('edit-group');
 
     });
 });
