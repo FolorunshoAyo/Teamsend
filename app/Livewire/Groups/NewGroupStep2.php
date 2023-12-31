@@ -4,10 +4,13 @@ namespace App\Livewire\Groups;
 
 use App\Models\Contact;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 class NewGroupStep2 extends Component
 {
+    use WithPagination;
+    
     public $perPage = 10;
     public $selectAll = false;
     public $selectedContacts = [];
@@ -22,7 +25,7 @@ class NewGroupStep2 extends Component
     public function render()
     {
         $orgId = $this->org_id;
-        
+
         $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
             $query->where('org_id', $orgId);
         })
@@ -36,9 +39,19 @@ class NewGroupStep2 extends Component
         ->paginate($this->perPage);
 
         return view('livewire.groups.new-group-step2', [
-            'contacts' => $contacts
+            'contacts' => $contacts,
+            'totalContacts' => $this->totalContacts
         ]);
     }
+
+    public function getTotalContactsProperty(){
+        $orgId = $this->org_id;
+
+        return Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })->count();
+    }
+
 
     public function previousStep()
     {
@@ -46,7 +59,7 @@ class NewGroupStep2 extends Component
         $this->dispatch("navigate", step: 1);
     }
 
-    public function updateSelectedContacts()
+    public function toggleSelectedContacts()
     {
         $orgId = $this->org_id;
         

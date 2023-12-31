@@ -172,8 +172,8 @@
                     <span>All Contacts</span>
                   </a>
                 </li>
-                <li class="{{Route::is('org-admin.bulk-upload')? "active" : ""}}">
-                  <a href="{{ route('org-admin.bulk-upload', ['organisation' => "$reformatted_org_name"]) }}">
+                <li class="{{Route::is('org-admin.bulk-import-export')? "active" : ""}}">
+                  <a href="{{ route('org-admin.bulk-import-export', ['organisation' => "$reformatted_org_name"]) }}">
                     <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                     <span>Bulk Import/Export</span>
                   </a>

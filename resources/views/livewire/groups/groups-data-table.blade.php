@@ -74,7 +74,7 @@
                                 $user = Auth::user();
                             @endphp
                             @foreach ($groups as $group)
-                            <tr>
+                            <tr wire:key="{{ $group->id }}">
                                 <td class="image-cell">
                                     <div class="image">
                                         <img src="{{ asset('images/avatar.svg') }}" class="rounded-full" />

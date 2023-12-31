@@ -17,7 +17,7 @@ class ContactsDataTable extends Component
     public $perPage = 10;
     public $search = '';
     public $selectAll = false;
-    public $selectedContacts = [];
+    public $selected = [];
     public $selectedContact;
     public $user_id;
     public $is_blocked = "0";
@@ -30,6 +30,16 @@ class ContactsDataTable extends Component
         $this->org_id = $orgId;
         $this->user_id = Auth::user()->id;
     }
+
+    // public function updateSelectedContacts(){
+    //     dd($this->selected);
+    // }
+
+    // public function updatedPage($page)
+    // {
+    //     // dd($page);
+    //     $this->selected = $this->selected;
+    // }
 
     protected $listeners = [
         'contactUpdated' => 'refreshTable'
@@ -44,7 +54,7 @@ class ContactsDataTable extends Component
 
         if($this->activeFilter === null){
             // Query to get all contacts
-            $contacts   = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
                 $query->where('org_id', $orgId);
             })
             ->where(function ($query) use ($searchTerm) {
@@ -101,11 +111,21 @@ class ContactsDataTable extends Component
         }
 
         return view('livewire.contacts.contacts-data-table', [
-            'contacts' => $contacts
+            'contacts' => $contacts,
+            'totalContacts' => $this->totalContacts
         ]);
     }
 
-    public function updateSelectedContacts()
+    public function getTotalContactsProperty(){
+        $orgId = $this->org_id;
+
+        return Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })->count();
+    }
+
+
+    public function toggleSelected()
     {
         $orgId = $this->org_id;
         
@@ -115,19 +135,22 @@ class ContactsDataTable extends Component
         ->with('userOrganisation.user')
         ->orderBy('created_at', 'desc')
         ->pluck('id')
+        ->map(function ($id) {
+            return (string) $id;
+        })
         ->toArray();
 
         $this->updateDataTableState($arrayOfContacts);
     }
 
     public function updateDataTableState($contacts){
-        if(count($this->selectedContacts) === 0){
+        if(count($this->selected) === 0){
             $this->selectAll = false;
         }else{
-            sort($this->selectedContacts);
+            sort($this->selected);
             sort($contacts);
 
-            if (empty(array_diff($this->selectedContacts, $contacts)) && empty(array_diff($contacts, $this->selectedContacts))) {
+            if (empty(array_diff($this->selected, $contacts)) && empty(array_diff($contacts, $this->selected))) {
                 $this->selectAll = true;
             }else{
                 $this->selectAll = false;
@@ -135,13 +158,11 @@ class ContactsDataTable extends Component
         }
 
         if($this->selectAll === true){
-            $this->selectedContacts = $contacts;
+            $this->selected = $contacts;
         }
     }
 
     public function toggleSelectAll(){
-        // $this->dispatch('actionDoneOnDataTable');
-
         $this->selectAll = !$this->selectAll;
 
         $orgId = $this->org_id;
@@ -152,12 +173,15 @@ class ContactsDataTable extends Component
         ->with('userOrganisation.user')
         ->orderBy('created_at', 'desc')
         ->pluck('id')
+        ->map(function ($id) {
+            return (string) $id;
+        })
         ->toArray();
 
         if($this->selectAll === true){
-            $this->selectedContacts = $arrayOfContacts;
+            $this->selected = $arrayOfContacts;
         } else {
-            $this->selectedContacts = [];
+            $this->selected = [];
         }
 
         $this->updateDataTableState($arrayOfContacts);
@@ -197,8 +221,8 @@ class ContactsDataTable extends Component
 
         if($column_to_update === "is_favourite" || $column_to_update === "is_trashed" || $column_to_update === "is_blocked"){
             
-            if(count($this->selectedContacts) > 0){
-                foreach ($this->selectedContacts as $contactId) {
+            if(count($this->selected) > 0){
+                foreach ($this->selected as $contactId) {
                     $orgId = $this->org_id;
         
                     $contact = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
@@ -232,8 +256,8 @@ class ContactsDataTable extends Component
         $column_to_update = "is_$destination";
 
         if($column_to_update === "is_favourite" || $column_to_update === "is_trashed" || $column_to_update === "is_blocked"){
-            if(count($this->selectedContacts) > 0){
-                foreach ($this->selectedContacts as $contactId) {
+            if(count($this->selected) > 0){
+                foreach ($this->selected as $contactId) {
                     $orgId = $this->org_id;
         
                     $contact = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {

@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <p class="ml-2 flex items-center p-2">
-                        <span class="text-green-500">Total: <span>{{ count($contacts) }}</span>
+                        <span class="text-green-500">Total: <span>{{ $totalContacts }}</span>
                             contact(s)</span>
                     </p>
                 </div>
@@ -72,9 +72,9 @@
                     </thead>
                     <tbody>
                         @foreach ($contacts as $contact)
-                            <tr>
+                            <tr wire:key="{{ $contact->id }}">
                                 <td class="checkbox-cell">
-                                    <label class="checkbox"  wire:click="updateSelectedContacts">
+                                    <label class="checkbox"  wire:click="toggleSelectedContacts">
                                         <input type="checkbox" wire:model="selectedContacts" value="{{ $contact->id }}"/>
                                         <span class="check"></span>
                                     </label>

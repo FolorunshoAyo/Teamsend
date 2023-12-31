@@ -56,13 +56,13 @@
                 </p>
                 <div class="tools inline-flex relative items-center space-x-2">
                     {{-- <div id="loading-overlay" class="absolute top-0 right-0 w-full h-full bg-black opacity-5 z-50" style="display: none;"></div> --}}
-                    {{-- <p id="contacts-count" class="ml-2 flex items-center p-2" style="display: {{count($selectedContacts) > 0? 'block' : 'none'}}">
-                        <span class="text-green-500">Selected: <span>{{ count($selectedContacts) }}</span>
+                    {{-- <p id="contacts-count" class="ml-2 flex items-center p-2" style="display: {{count($selected) > 0? 'block' : 'none'}}">
+                        <span class="text-green-500">Selected: <span>{{ count($selected) }}</span>
                                 contact(s)</span>
                     </p> --}}
-                    @if (count($selectedContacts) > 0)
+                    @if (count($selected) > 0)
                     <p class="ml-2 flex items-center p-2">
-                        <span class="text-green-500">Selected: <span>{{ count($selectedContacts) }}</span>
+                        <span class="text-green-500">Selected: <span>{{ count($selected) }}</span>
                                 contact(s)</span>
                     </p>
                     @endif
@@ -106,8 +106,9 @@
                     </button>
                 </div>
                 <p class="ml-2 flex items-center p-2">
-                    <span class="text-green-500">Total: <span>{{ count($contacts) }}</span>
-                        contact(s)</span>
+                    <span class="text-green-500">Total: 
+                        <span>{{ $totalContacts }}</span> contact(s)
+                    </span>
                 </p>
             </header>
             <div class="card-content">
@@ -120,6 +121,12 @@
                                     <span class="check"></span>
                                 </label>
                             </th>
+                            {{-- <th class="checkbox-cell">
+                                <label class="checkbox">
+                                    <input type="checkbox" wire:model="selectPage">
+                                    <span class="check"></span>
+                                </label>
+                            </th> --}}
                             <th class="image-cell"></th>
                             <th>User</th>
                             <th>Email</th>
@@ -133,10 +140,10 @@
                             $user = Auth::user();
                         @endphp
                         @foreach ($contacts as $contact)
-                            <tr>
-                                <td class="checkbox-cell">
-                                    <label class="checkbox" wire:click="updateSelectedContacts">
-                                        <input type="checkbox" wire:model="selectedContacts" value="{{ $contact->id }}">
+                            <tr wire:key="{{ $contact->id }}">
+                                <td class="checkbox-cell">   
+                                    <label class="checkbox" wire:click="toggleSelected">
+                                        <input type="checkbox" wire:model="selected" value="{{ $contact->id }}">
                                         <span class="check"></span>
                                     </label>
                                 </td>

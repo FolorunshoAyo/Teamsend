@@ -174,21 +174,21 @@ Route::name('org-admin.')->group(function () {
         })
         ->name('contacts');
 
-        Route::get('{organisation}/admin/contacts/bulk-upload', function(Request $request){
+        Route::get('{organisation}/admin/contacts/bulk-import-export', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
 
             $organisation_name = $organisation->name;
 
-            return view('admin.bulk-upload', [
-                "pageTitle" => "Bulk Upload - ($organisation_name) | Teamsend",
-                "pageHeroTitle" => "Bulk Upload",
-                "pageLinkTitle" => "Bulk Upload",
+            return view('admin.bulk-import-export', [
+                "pageTitle" => "Bulk Import/Export - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Bulk Import/Export",
+                "pageLinkTitle" => "Bulk Import/Export",
                 "organisation" => $organisation,
                 "user" => $currUser
             ]);
         })
-        ->name('bulk-upload');
+        ->name('bulk-import-export');
 
         Route::get('{organisation}/admin/groups', function(Request $request){
             $organisation = $request->get('organisation');

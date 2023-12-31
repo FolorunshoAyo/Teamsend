@@ -72,7 +72,7 @@
                     </thead>
                     <tbody>
                         @foreach ($contacts as $contact)
-                            <tr>
+                            <tr wire:key="{{ $contact->id }}">
                                 <td class="checkbox-cell">
                                     <label class="checkbox"  wire:click="updateSelectedContacts">
                                         <input type="checkbox" wire:model="selectedContacts" value="{{ $contact->id }}"/>

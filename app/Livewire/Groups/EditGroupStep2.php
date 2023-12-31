@@ -4,10 +4,13 @@ namespace App\Livewire\Groups;
 
 use App\Models\Contact;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 class EditGroupStep2 extends Component
 {
+    use WithPagination;
+    
     public $perPage = 10;
     public $selectAll = false;
     public $selectedContacts = [];
@@ -47,9 +50,19 @@ class EditGroupStep2 extends Component
         ->paginate($this->perPage);
 
         return view('livewire.groups.edit-group-step2', [
-            'contacts' => $contacts
+            'contacts' => $contacts,
+            'totalContacts' => $this->totalContacts
         ]);
     }
+
+    public function getTotalContactsProperty(){
+        $orgId = $this->org_id;
+
+        return Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })->count();
+    }
+
 
     public function previousStep()
     {
