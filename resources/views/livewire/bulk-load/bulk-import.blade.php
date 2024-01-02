@@ -6,15 +6,15 @@
         </p>
     </header>
     <div class="card-content">
-        <img src="https://fullaccess.maildoll.com/bulk/import.jpg" class="mx-auto" style="width: 250px; height: 250px;"/>
+        <img src="{{asset('images/import.jpg')}}" class="mx-auto" style="width: 250px; height: 250px;"/>
         
-        {{-- @if ($errors->any())
+        @if ($errors->any())
             @foreach ($errors->all() as $error)
                 <div class="my-4 flex items-center gap-2 p-2 mb-2 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
                     <i class="mdi mdi-information-outline font-medium"></i> {{ $error }}
                 </div>
             @endforeach
-        @endif --}}
+        @endif
 
         @if (session('error'))
             <div class="my-4 flex items-center gap-2 p-2 mb-2 text-sm text-red-800 rounded-lg bg-red-50" role="alert">

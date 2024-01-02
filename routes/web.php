@@ -1,11 +1,12 @@
 <?php
 
-use App\Livewire\Logout;
 use App\Models\Lists;
+use App\Livewire\Logout;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,6 +127,12 @@ Route::name('org-admin.')->group(function () {
     // This middleware should check if a user belongs to the organisation and is an admin
     Route::group(['middleware' => 'AdminOrganisationCheck'], function () {
 
+        
+        /*
+        ==============================
+           Dashboard Route
+        ==============================
+        */
         Route::get('{organisation}/admin/dashboard', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
@@ -141,7 +148,18 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('dashboard');
+        
+        /*
+        ==============================
+           End Dashboard Route
+        ==============================
+        */
 
+        /*
+        ==============================
+            View Agents Route
+        ==============================
+        */
         Route::get('{organisation}/admin/agents', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
@@ -157,7 +175,17 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('agents');
+        /*
+        ==============================
+           End View Agents Route
+        ==============================
+        */
 
+        /*
+        ==============================
+        View Contacts Route
+        ==============================
+        */
         Route::get('{organisation}/admin/contacts', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
@@ -173,7 +201,17 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('contacts');
+        /*
+        ==============================
+        End View Contacts Route
+        ==============================
+        */
 
+        /*
+        ==============================
+           Bulk Import/Export Routes
+        ==============================
+        */
         Route::get('{organisation}/admin/contacts/bulk-import-export', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
@@ -189,7 +227,17 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('bulk-import-export');
+        /*
+        ==============================
+           End Bulk Import/Export Routes
+        ==============================
+        */
 
+        /*
+        ==============================
+            Group Routes
+        ==============================
+        */
         Route::get('{organisation}/admin/groups', function(Request $request){
             $organisation = $request->get('organisation');
             $currUser = $request->get('activeUser');
@@ -221,7 +269,6 @@ Route::name('org-admin.')->group(function () {
             ]);
         })
         ->name('new-group');
-
     
         Route::get('{organisation}/admin/group/{id}', function(Request $request){
             $organisation = $request->get('organisation');
@@ -295,6 +342,53 @@ Route::name('org-admin.')->group(function () {
         })
         ->name('edit-group');
 
+        /*
+        ==============================
+           End Group Routes
+        ==============================
+        */
+
+        /*
+        ==============================
+            Email Builder Routes
+        ==============================
+        */
+            Route::get('{organisation}/admin/email-templates', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+
+                $organisation_name = $organisation->name;
+
+                return view('admin.email-templates', [
+                    "pageTitle" => "All Email Templates - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "All Email Templates",
+                    "pageLinkTitle" => "Email Templates",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('email-templates');
+
+            Route::get('{organisation}/admin/email-template/new', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+    
+                $organisation_name = $organisation->name;
+    
+                return view('admin.new-email-template', [
+                    "pageTitle" => "New Email Template - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "New Email Template",
+                    "pageLinkTitle" => "New Email Template",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('new-email-template');
+        /*
+        ==============================
+           End Email Builder Routes
+        ==============================
+        */
     });
 });
 
