@@ -23,289 +23,50 @@
                 </span>
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-1">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-1">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
+                @php
+                    $user = Auth::user();
+                @endphp
+                @foreach ($templates as $template)
+                    <div class="card">
+                        <header class="card-header">
+                            <div class="card-header-title">
+                            <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
+                            <div class="leading-tight text-xs">
+                                Template Name
+                                <p class="text-green-500">1 day ago</p>
                             </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center mb-2" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-2">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-2">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
                             </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-3">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-3">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
+                            <div class="flex relative">
+                                <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-1">
+                                    <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
                                 </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
+                                <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-1">
+                                    <a href="#" class="navbar-item gap-1">
+                                        <i class="mdi mdi-eye-outline"></i> Preview
+                                    </a>
+                                    <a href="#" class="navbar-item gap-1">
+                                        <i class="mdi mdi-content-duplicate"></i> Duplicate
+                                    </a>
+                                    <a href="#" class="navbar-item gap-1">
+                                        <i class="mdi mdi-pencil-outline"></i> Edit
+                                    </a>
+                                    {{-- <a href="#" class="navbar-item gap-1">
+                                        <i class="mdi mdi-image-outline"></i> Edit Thumbnail
+                                    </a> --}}
+                                    <a href="#" class="navbar-item gap-1">
+                                        <i class="mdi mdi-trash-can-outline"></i> Delete Template
+                                    </a>
+                                </div>
                             </div>
+                        </header>
+                        <div class="card-content">
+                            <div class="w-full h-40 bg-no-repeat bg-contain bg-center mb-2" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
                         </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
                     </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-4">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-4">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-5">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-5">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-6">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-6">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <div class="card-header-title">
-                        <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
-                        <div class="leading-tight text-xs">
-                            Template Name
-                            <p class="text-green-500">1 day ago</p>
-                        </div>
-                        </div>
-                        <div class="flex relative">
-                            <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-7">
-                                <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
-                            </a>
-                            <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-7">
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-eye-outline"></i> Preview
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-pencil-outline"></i> Edit
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-image-outline"></i> Edit Thumbnail
-                                </a>
-                                <a href="#" class="navbar-item gap-1">
-                                    <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <div class="w-full h-40 bg-no-repeat bg-contain bg-center" style="background-image: url('https://fullaccess.maildoll.com/not_found/no-preview.png');"></div>
-                    </div>
-                </div>
+                @endforeach
             </div>
-            <div class="table-pagination">
-                <div class="flex items-center justify-between">
-                    <nav class="pagination my-6">
-                        <ul>
-                        <li>
-                            <a href="#" class="active">Previous</a>
-                        </li>
-                        <li>
-                            <a href="#">1</a>
-                        </li>
-                        <li>
-                            <a href="#">2</a>
-                        </li>
-                        <li>
-                            <a href="#">3</a>
-                        </li>
-                        <li>
-                            <a href="#" >4</a>
-                        </li>
-                        <li>
-                            <a href="#">5</a>
-                        </li>
-                        <li>
-                            <a href="#">Next</a>
-                        </li>
-                        </ul>
-                    </nav>
-                    <small>Page 1 of 10</small>
-                </div>
-            </div>
+            <!-- Table pagination -->
+            {{ $templates->links('livewire.custom-pagination') }}
         @endif
     </div>
 </section>
