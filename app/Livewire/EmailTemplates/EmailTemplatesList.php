@@ -10,9 +10,11 @@ class EmailTemplatesList extends Component
 {
     use WithPagination;
     public $orgId;
+    public $org_name;
 
-    public function mount($orgId){
+    public function mount($orgId, $orgName){
         $this->orgId = $orgId;
+        $this->org_name = $orgName;
     }
 
     public function getEmailTemplatesProperty(){
@@ -26,8 +28,11 @@ class EmailTemplatesList extends Component
         ->paginate(6);
     }
 
+    // created by <span class="text-green-500">{{ $templates->userOrganisation->user->id !== $user->id ? $templates->userOrganisation->user->first_name . ' ' . $templates->userOrganisation->user->last_name : 'Me'  }}</span>
     public function render()
     {
+        // dd($this->emailTemplates);
+
         return view(
             'livewire.email-templates.email-templates-list', [
             'templates' => $this->emailTemplates

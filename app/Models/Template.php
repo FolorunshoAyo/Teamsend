@@ -14,6 +14,7 @@ class Template extends Model
         'template_name',
         'template_file_destination',
         'template_html',
+        'design_template'
     ];
 
     /**

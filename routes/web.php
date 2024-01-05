@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\EmailTemplateHtmlController;
+use App\Http\Controllers\EmailTemplateImageController;
 use App\Models\Lists;
-use App\Livewire\Logout;
 use App\Models\Organisation;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -384,6 +386,44 @@ Route::name('org-admin.')->group(function () {
                 ]);
             })
             ->name('new-email-template');
+
+            Route::get('{organisation}/admin/email-template/edit/{id}', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+                $urlOrgName = $request->route("organisation");
+                $templateId = $request->route('id');
+
+                // Check if user is allowed to edit this group
+                $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($currUser) {
+                    $query->where('user_id', $currUser->id);
+                })->first();                
+
+                $orgId = $organisation->id;
+    
+                $hasTemplate = Template::whereHas('userOrganisation', function ($query) use ($orgId) {
+                    $query->where('org_id', $orgId);
+                })->where('id', $templateId)->exists();
+    
+                $organisation_name = $organisation->name;
+    
+                if($hasTemplate){
+                    $template = Template::find($templateId);
+    
+                    return view('admin.edit-email-template', [
+                        "pageTitle" => "Editing Email Template ($template->template_name) - ($organisation_name) | Teamsend",
+                        "organisation" => $organisation,
+                        "user" => $currUser,
+                        "templateDetails" => $template
+                    ]);
+                }else{
+                    // redirect to groups
+                    return redirect("/$urlOrgName/admin/email-templates");
+                }
+            })
+            ->name('edit-email-template');
+
+            Route::post('{organisation}/admin/email-template/upload-image', [EmailTemplateImageController::class, 'upload'])->name('upload-template-image');
+            Route::post('{organisation}/admin/email-template/upload-template', [EmailTemplateHtmlController::class, 'store'])->name('upload-template');
         /*
         ==============================
            End Email Builder Routes

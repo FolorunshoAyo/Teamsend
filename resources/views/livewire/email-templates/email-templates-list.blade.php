@@ -32,8 +32,11 @@
                             <div class="card-header-title">
                             <span class="icon"><i class="mdi mdi-xml mr-4"></i></span>
                             <div class="leading-tight text-xs">
-                                Template Name
-                                <p class="text-green-500">1 day ago</p>
+                                {{ $template->template_name }} created by <span class="text-green-500">{{ $template->userOrganisation->user->id !== $user->id ? $template->userOrganisation->user->first_name . ' ' . $template->userOrganisation->user->last_name : 'me'  }}</span> 
+                                <p><span>created:</span> <span class=""></span>{{ $template->created_at->diffForHumans() }}</p>
+                                @if ($template->updated_at > $template->created_at)
+                                <p>updated: <span class="text-green-500">{{ $template->updated_at->diffForHumans() }}</span></p>
+                                @endif
                             </div>
                             </div>
                             <div class="flex relative">
@@ -47,7 +50,10 @@
                                     <a href="#" class="navbar-item gap-1">
                                         <i class="mdi mdi-content-duplicate"></i> Duplicate
                                     </a>
-                                    <a href="#" class="navbar-item gap-1">
+                                    <a href="{{ route('org-admin.edit-email-template', [
+                                        'organisation' => $org_name,
+                                        'id' => $template->id 
+                                    ]) }}" class="navbar-item gap-1">
                                         <i class="mdi mdi-pencil-outline"></i> Edit
                                     </a>
                                     {{-- <a href="#" class="navbar-item gap-1">
