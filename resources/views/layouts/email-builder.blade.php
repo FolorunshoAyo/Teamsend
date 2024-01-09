@@ -163,7 +163,8 @@
         saveMethod: "POST",
         data: {
           _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-          type: "default"
+          type: "default",
+          template_id: "{{ $templateDetails->id }}"
         },
         templates: templates,
         tags: tags,

@@ -21,11 +21,10 @@ class EmailTemplateHtmlController extends Controller
         // Validate the request data
         $request->validate([
             'content' => 'required|string',
+            'template_id' => 'required|string',
         ]);
 
-        $template = Template::whereHas('userOrganisation', function ($query) use ($currUser) {
-            $query->where('user_id', $currUser->id);
-        })->first();
+        $template = Template::find($request->template_id);
 
         // Get the HTML content from the request
         $htmlContent = $request->content;

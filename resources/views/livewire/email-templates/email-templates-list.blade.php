@@ -19,7 +19,7 @@
                     <i class="mdi mdi-open-in-new mdi-24px"></i> Add New Email Template
                 </button>
                 <span class="text-green-600 font-semi-bold">
-                    Email Templates (14)
+                    Email Templates ({{ $templates->count() }})
                 </span>
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -40,10 +40,10 @@
                             </div>
                             </div>
                             <div class="flex relative">
-                                <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-1">
+                                <a href="javasript:void(0)" class="flex-1 card-header-icon --jb-navbar-menu-toggle" data-target="template-menu-{{$loop->iteration}}">
                                     <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
                                 </a>
-                                <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-1">
+                                <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-{{$loop->iteration}}">
                                     <a href="#" class="navbar-item gap-1">
                                         <i class="mdi mdi-eye-outline"></i> Preview
                                     </a>
