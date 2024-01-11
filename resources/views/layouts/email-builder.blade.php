@@ -4,7 +4,7 @@
     <title>{{ $pageTitle }}</title>
     @php
         $reformatted_org_name = strtolower(join("-", explode(" ", $organisation->name)));
-        $template = ($templateDetails->template_html !== ""? "$templateDetails->template_file_destination" : "asset('email-builder/templates/default/' . $templateDetails->design_template . '/index.html')}}")
+        $template = ($templateDetails->template_html? "$templateDetails->template_file_destination" : url("/email-builder/templates/default/" . $templateDetails->design_template . "/index.html"))
     @endphp
     <meta charset="utf-8" />
     <meta

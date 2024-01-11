@@ -11,6 +11,7 @@ class EmailTemplatesList extends Component
     use WithPagination;
     public $orgId;
     public $org_name;
+    public $confirmingTemplateId = null;
 
     public function mount($orgId, $orgName){
         $this->orgId = $orgId;
@@ -28,14 +29,60 @@ class EmailTemplatesList extends Component
         ->paginate(6);
     }
 
-    // created by <span class="text-green-500">{{ $templates->userOrganisation->user->id !== $user->id ? $templates->userOrganisation->user->first_name . ' ' . $templates->userOrganisation->user->last_name : 'Me'  }}</span>
+    public function duplicateTemplate($template_id){
+        $orgId = $this->orgId;
+
+        $template = Template::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })
+        ->where("id", $template_id);
+
+        if ($template && $template->exists()) {
+            $duplicateTemplate = $template->first()->replicate();
+            $duplicateTemplate->save();
+            $this->dispatch("success", message: "Template duplicated successfully");
+        }else{
+            $this->dispatch("error", message: "Unable to duplicate template");
+        }
+    }
+
+    public function deleteTemplate()
+    {
+        $orgId = $this->orgId;
+
+        $template = Template::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })
+        ->where("id", $this->confirmingTemplateId);
+
+        if ($template && $template->exists()) {
+            $template->delete();
+            $this->confirmingTemplateId = null;
+            $this->dispatch("success", message: "Template deleted successfully");
+        }else{
+            $this->dispatch("error", message: "Unable to delete template");
+        }
+    }
+
+    public function confirmTemplateDelete($template_id)
+    {
+        $this->confirmingTemplateId = $template_id;
+    }
+
+    public function getTotalTemplatesProperty(){
+        $orgId = $this->orgId;
+
+        return Template::whereHas('userOrganisation', function ($query) use ($orgId) {
+            $query->where('org_id', $orgId);
+        })->count();
+    }
+
     public function render()
     {
-        // dd($this->emailTemplates);
-
         return view(
             'livewire.email-templates.email-templates-list', [
-            'templates' => $this->emailTemplates
+            'templates' => $this->emailTemplates,
+            'totalTemplates' => $this->totalTemplates
         ]);
     }
 }

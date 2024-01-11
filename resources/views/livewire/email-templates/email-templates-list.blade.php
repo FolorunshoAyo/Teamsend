@@ -10,16 +10,16 @@
                 </div>
                 <hr />
                 <div class="text-end p-4">
-                    <button class="button w-1/4 md:w-1/2">Add New Template</button>
+                    <a href="{{ route('org-admin.new-email-template', ['organisation' => $org_name]) }}" class="button w-1/4 md:w-1/2">Add New Template</a>
                 </div>
             </div>
         @else
             <div class="mb-4 flex items-center justify-between">
-                <button type="submit" class="button flex gap-2 items-center justify-center bg-green-500 text-white">
+                <a href="{{ route('org-admin.new-email-template', ['organisation' => $org_name]) }}" class="button flex gap-2 items-center justify-center bg-green-500 text-white">
                     <i class="mdi mdi-open-in-new mdi-24px"></i> Add New Email Template
-                </button>
+                </a>
                 <span class="text-green-600 font-semi-bold">
-                    Email Templates ({{ $templates->count() }})
+                    Email Templates ({{ $totalTemplates }})
                 </span>
             </div>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -44,12 +44,12 @@
                                     <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
                                 </a>
                                 <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-{{$loop->iteration}}">
-                                    <a href="#" class="navbar-item gap-1">
+                                    <a href="{{ url( "/" . ($template->template_file_destination? "$template->template_file_destination" : "email-builder/templates/default/" . $template->design_template . "/index.html")) }}" target="_blank" class="navbar-item gap-1">
                                         <i class="mdi mdi-eye-outline"></i> Preview
                                     </a>
-                                    <a href="#" class="navbar-item gap-1">
+                                    <button wire:click="duplicateTemplate({{ $template->id }})" class="navbar-item gap-1">
                                         <i class="mdi mdi-content-duplicate"></i> Duplicate
-                                    </a>
+                                    </button>
                                     <a href="{{ route('org-admin.edit-email-template', [
                                         'organisation' => $org_name,
                                         'id' => $template->id 
@@ -59,9 +59,9 @@
                                     {{-- <a href="#" class="navbar-item gap-1">
                                         <i class="mdi mdi-image-outline"></i> Edit Thumbnail
                                     </a> --}}
-                                    <a href="#" class="navbar-item gap-1">
+                                    <button wire:click="confirmTemplateDelete({{ $template->id }})" class="navbar-item gap-1">
                                         <i class="mdi mdi-trash-can-outline"></i> Delete Template
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </header>
@@ -74,5 +74,34 @@
             <!-- Table pagination -->
             {{ $templates->links('livewire.custom-pagination') }}
         @endif
+
+        @if ($confirmingTemplateId)
+            <div class="modal active">
+                <div class="modal-background --jb-modal-close"></div>
+                <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Delete Template</p>
+                </header>
+                <section class="modal-card-body">
+                    <p><b>Are you sure you want to delete this template?</b></p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" wire:click="deleteTemplate">Confirm</button>
+                    <button class="button red" wire:click="$set('confirmingTemplateId', null)">Cancel</button>
+                </footer>
+                </div>
+            </div>
+        @endif
     </div>
 </section>
+@script
+    <script>
+        $wire.on('success', (event) => {
+            console.log(event);
+            toastr.success(event.message, "Success");
+        });
+        $wire.on('error', (event) => {
+            toastr.error(event.message, "Error");
+        });
+    </script>
+@endscript
