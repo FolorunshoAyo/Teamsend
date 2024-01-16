@@ -37,6 +37,7 @@ class GroupsDataTable extends Component
         ->whereHas('userOrganisation', function ($query) use ($orgId) {
             $query->where('org_id', $orgId);
         })
+        ->where('deleted', 0)
         ->where(function ($query) use ($searchTerm) {
             $query->where('list_name', 'like', '%' . $searchTerm . '%')
                 ->orWhere('list_description', 'like', '%' . $searchTerm . '%');

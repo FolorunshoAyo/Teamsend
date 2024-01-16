@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\EmailTemplateHtmlController;
-use App\Http\Controllers\EmailTemplateImageController;
 use App\Models\Lists;
-use App\Models\Organisation;
+use App\Models\Campaign;
 use App\Models\Template;
+use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\EmailTemplateHtmlController;
+use App\Http\Controllers\EmailTemplateImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -442,7 +443,7 @@ Route::name('org-admin.')->group(function () {
 
                 $organisation_name = $organisation->name;
 
-                return view('admin.campaigns', [
+                return view('admin.email-campaigns', [
                     "pageTitle" => "All Email Campaigns - ($organisation_name) | Teamsend",
                     "pageHeroTitle" => "All Email Campaigns",
                     "pageLinkTitle" => "Email Campaigns",
@@ -450,7 +451,7 @@ Route::name('org-admin.')->group(function () {
                     "user" => $currUser
                 ]);
             })
-            ->name('campaigns');
+            ->name('email-campaigns');
 
             Route::get('{organisation}/admin/campaign/new', function(Request $request){
                 $organisation = $request->get('organisation');
@@ -458,7 +459,7 @@ Route::name('org-admin.')->group(function () {
 
                 $organisation_name = $organisation->name;
 
-                return view('admin.new-campaign', [
+                return view('admin.new-email-campaign', [
                     "pageTitle" => "New Email Campaign - ($organisation_name) | Teamsend",
                     "pageHeroTitle" => "New Email Campaign",
                     "pageLinkTitle" => "New Email Campaign",
@@ -466,7 +467,7 @@ Route::name('org-admin.')->group(function () {
                     "user" => $currUser
                 ]);
             })
-            ->name('new-campaign');
+            ->name('new-email-campaign');
 
             Route::get('{organisation}/admin/campaign/edit/{id}', function(Request $request){
                 $organisation = $request->get('organisation');
@@ -475,33 +476,33 @@ Route::name('org-admin.')->group(function () {
                 $campaignId = $request->route('id');
 
                 // Check if user is allowed to edit this group
-                $organisation = Campaign::whereHas('userOrganisations', function ($query) use ($currUser) {
+                $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($currUser) {
                     $query->where('user_id', $currUser->id);
                 })->first();                
 
                 $orgId = $organisation->id;
 
-                $hasTemplate = Template::whereHas('userOrganisation', function ($query) use ($orgId) {
+                $hasCampaign = Campaign::whereHas('userOrganisation', function ($query) use ($orgId) {
                     $query->where('org_id', $orgId);
-                })->where('id', $templateId)->exists();
+                })->where('id', $campaignId)->exists();
 
                 $organisation_name = $organisation->name;
 
-                if($hasTemplate){
-                    $template = Template::find($templateId);
+                if($hasCampaign){
+                    $campaign = Campaign::find($campaignId);
 
-                    return view('admin.edit-email-template', [
-                        "pageTitle" => "Editing Email Template ($template->template_name) - ($organisation_name) | Teamsend",
+                    return view('admin.edit-email-campaign', [
+                        "pageTitle" => "Editing Email Template ($campaign->campaign_name) - ($organisation_name) | Teamsend",
                         "organisation" => $organisation,
                         "user" => $currUser,
-                        "templateDetails" => $template
+                        "campaignDetails" => $campaign
                     ]);
                 }else{
                     // redirect to groups
                     return redirect("/$urlOrgName/admin/email-templates");
                 }
             })
-            ->name('edit-email-template');
+            ->name('edit-email-campaign');
 
          /*
         ==============================

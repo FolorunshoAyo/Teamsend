@@ -108,21 +108,21 @@
       </ul>
       <p class="menu-label">Campaigns</p>
       <ul class="menu-list">
-        <li class="--set-active-all-campaigns-html --set-active-all-schedules-html --set-active-new-campaign-html --set-active-email-schedule-html --set-active-email-tracker-html --set-active-mail-logs-html --set-active-campaign-logs-html">
+        <li class="{{Route::is('org-admin.email-campaigns') || Route::is('org-admin.new-email-campaign')? "active" : ""}}">
           <a class="dropdown">
             <span class="icon"><i class="mdi mdi-xml"></i></span>
             <span class="menu-item-label">Campaigns</span>
-            <span class="icon"><i class="mdi mdi---plus-or-minus-campaigns"></i></span>
+            <span class="icon"><i class="mdi {{Route::is('org-admin.email-campaigns') || Route::is('org-admin.new-email-campaign')? "mdi-minus" : "mdi-plus"}}"></i></span>
           </a>
           <ul>
-            <li class="--set-active-all-campaigns-html">
-              <a href="all-campaigns.html">
+            <li class="{{ Route::is('org-admin.email-campaigns')? "active" : "" }}">
+              <a href="{{ route('org-admin.email-campaigns', ['organisation' => "$reformatted_org_name"]) }}">
                 <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                 <span>All Campaigns</span>
               </a>
             </li>
-            <li class="--set-active-new-campaign-html">
-              <a href="new-campaign.html">
+            <li class="{{ Route::is('org-admin.new-email-campaign')? "active" : "" }}">
+              <a href="{{ route('org-admin.new-email-campaign', ['organisation' => "$reformatted_org_name"]) }}">
                 <span class="icon"><i class="mdi mdi mdi-format-align-left"></i></span>
                 <span>Add New</span>
               </a>
