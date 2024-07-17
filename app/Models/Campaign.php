@@ -33,6 +33,11 @@ class Campaign extends Model
 
     public function campaignList()
     {
-        return $this->belongsTo(List::class, 'list');
+        return $this->belongsTo(Lists::class, 'list');
+    }
+
+    public function sentEmails()
+    {
+        return $this->hasMany(SentEmail::class, 'campaign_id');
     }
 }

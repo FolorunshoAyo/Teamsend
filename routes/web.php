@@ -129,8 +129,6 @@ Route::name('super-admin.')->group(function () {
 Route::name('org-admin.')->group(function () {
     // This middleware should check if a user belongs to the organisation and is an admin
     Route::group(['middleware' => 'AdminOrganisationCheck'], function () {
-
-        
         /*
         ==============================
            Dashboard Route
@@ -303,7 +301,7 @@ Route::name('org-admin.')->group(function () {
                 ]);
             }else{
                 // redirect to groups
-                return redirect("/$urlOrgName/admin/groups");
+                return redirect()->route('org-admin.groups', ['organisation' => $urlOrgName]);
             }
         })
         ->name('view-group');
@@ -340,7 +338,7 @@ Route::name('org-admin.')->group(function () {
                 ]);
             }else{
                 // redirect to groups
-                return redirect("/$urlOrgName/admin/groups");
+                return redirect()->route('org-admin.groups', ['organisation' => $urlOrgName]);
             }
         })
         ->name('edit-group');
@@ -417,8 +415,8 @@ Route::name('org-admin.')->group(function () {
                         "templateDetails" => $template
                     ]);
                 }else{
-                    // redirect to groups
-                    return redirect("/$urlOrgName/admin/email-templates");
+                    // redirect to all email templates
+                    return redirect()->route('org-admin.email-templates', ['organisation' => $urlOrgName]);
                 }
             })
             ->name('edit-email-template');
@@ -452,6 +450,42 @@ Route::name('org-admin.')->group(function () {
                 ]);
             })
             ->name('email-campaigns');
+
+            Route::get('{organisation}/admin/campaign/view/{id}', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+                $urlOrgName = $request->route("organisation");
+                $campaignId = $request->route('id');
+
+                // Check if user is allowed to edit this group
+                $organisation = Organisation::whereHas('userOrganisations', function ($query) use ($currUser) {
+                    $query->where('user_id', $currUser->id);
+                })->first();                
+
+                $orgId = $organisation->id;
+
+                $hasCampaign = Campaign::whereHas('userOrganisation', function ($query) use ($orgId) {
+                    $query->where('org_id', $orgId);
+                })->where('id', $campaignId)->exists();
+
+                $organisation_name = $organisation->name;
+
+                if($hasCampaign){
+                    $campaign = Campaign::find($campaignId);
+
+                    return view('admin.view-email-campaign', [
+                        "pageTitle" => "View Email Campaign ($campaign->campaign_name) - ($organisation_name) | Teamsend",
+                        "organisation" => $organisation,
+                        "user" => $currUser,
+                        "campaignDetails" => $campaign
+                    ]);
+                }else{
+                    // redirect to all campaigns
+                    return redirect()->route('org-admin.email-campaigns', ['organisation' => $urlOrgName]);
+                }
+            })
+            ->name('view-email-campaign');
+
 
             Route::get('{organisation}/admin/campaign/new', function(Request $request){
                 $organisation = $request->get('organisation');
@@ -499,7 +533,7 @@ Route::name('org-admin.')->group(function () {
                     ]);
                 }else{
                     // redirect to groups
-                    return redirect("/$urlOrgName/admin/email-templates");
+                    return redirect()->route('org-admin.email-campaigns', ['organisation' => $urlOrgName]);
                 }
             })
             ->name('edit-email-campaign');

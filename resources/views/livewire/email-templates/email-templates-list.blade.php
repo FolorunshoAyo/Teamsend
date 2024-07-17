@@ -44,7 +44,7 @@
                                     <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>
                                 </a>
                                 <div class="template-menu absolute w-max top-12 right-0 shadow bg-white rounded-sm" id="template-menu-{{$loop->iteration}}">
-                                    <a href="{{ url( "/" . ($template->template_file_destination? "$template->template_file_destination" : "email-builder/templates/default/" . $template->design_template . "/index.html")) }}" target="_blank" class="navbar-item gap-1">
+                                    <a href="{{ url(($template->template_file_destination? "$template->template_file_destination" : "email-builder/templates/default/" . $template->design_template . "/index.html")) }}" target="_blank" class="navbar-item gap-1">
                                         <i class="mdi mdi-eye-outline"></i> Preview
                                     </a>
                                     <button wire:click="duplicateTemplate({{ $template->id }})" class="navbar-item gap-1">
