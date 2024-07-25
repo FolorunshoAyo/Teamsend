@@ -184,6 +184,32 @@ Route::name('org-admin.')->group(function () {
 
         /*
         ==============================
+        Contacts Overview Route
+        ==============================
+        */
+        Route::get('{organisation}/admin/contacts/overview', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.contacts-overview', [
+                "pageTitle" => "Contacts Overview - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Contacts Overview",
+                "pageLinkTitle" => "Contacts Overview",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('contacts-overview');
+        /*
+        ==============================
+        End Contacts Overview Route
+        ==============================
+        */
+
+        /*
+        ==============================
         View Contacts Route
         ==============================
         */
@@ -346,6 +372,78 @@ Route::name('org-admin.')->group(function () {
         /*
         ==============================
            End Group Routes
+        ==============================
+        */
+
+        /*
+        ==============================
+           Subscription Routes
+        ==============================
+        */
+
+        Route::get('{organisation}/admin/subscription-plans', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.subscription-plans', [
+                "pageTitle" => "Subscription Plans - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Subscription Plans",
+                "pageLinkTitle" => "Subscription Plans",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('plans');
+
+        /*
+        ==============================
+           End Subscription Routes
+        ==============================
+        */
+
+        /*
+        ==============================
+           Email Routes
+        ==============================
+        */
+
+        Route::get('{organisation}/admin/email/check-bounce', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.check-bounce', [
+                "pageTitle" => "Bounce Checker - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Bounce Checker",
+                "pageLinkTitle" => "Bounce Checker",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('check-bounce');
+
+        Route::get('{organisation}/admin/email/bounced', function(Request $request){
+            $organisation = $request->get('organisation');
+            $currUser = $request->get('activeUser');
+
+            $organisation_name = $organisation->name;
+
+            return view('admin.bounced-emails', [
+                "pageTitle" => "Bounced Emails - ($organisation_name) | Teamsend",
+                "pageHeroTitle" => "Bounced Emails",
+                "pageLinkTitle" => "Bounced Emails",
+                "organisation" => $organisation,
+                "user" => $currUser
+            ]);
+        })
+        ->name('bounced-emails');
+
+        /*
+        ==============================
+           End Email Routes
         ==============================
         */
 
@@ -537,6 +635,70 @@ Route::name('org-admin.')->group(function () {
                 }
             })
             ->name('edit-email-campaign');
+
+            Route::get('{organisation}/admin/campaign/schedules', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+
+                $organisation_name = $organisation->name;
+
+                return view('admin.campaign-schedule', [
+                    "pageTitle" => "All Schedules - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "All Schedules",
+                    "pageLinkTitle" => "All Schedules",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('campaign-schedules');
+
+            Route::get('{organisation}/admin/campaign/tracker', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+
+                $organisation_name = $organisation->name;
+
+                return view('admin.campaign-tracker', [
+                    "pageTitle" => "Campaign Tracker - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "Campaign Tracker",
+                    "pageLinkTitle" => "Campaign Tracker",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('campaign-tracker');
+
+            Route::get('{organisation}/admin/mail-logs', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+
+                $organisation_name = $organisation->name;
+
+                return view('admin.mail-logs', [
+                    "pageTitle" => "Mail Logs - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "Mail Logs",
+                    "pageLinkTitle" => "Mail Logs",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('mail-logs');
+
+            Route::get('{organisation}/admin/campaign/logs', function(Request $request){
+                $organisation = $request->get('organisation');
+                $currUser = $request->get('activeUser');
+
+                $organisation_name = $organisation->name;
+
+                return view('admin.campaign-logs', [
+                    "pageTitle" => "Campaign Logs - ($organisation_name) | Teamsend",
+                    "pageHeroTitle" => "Campaign Logs",
+                    "pageLinkTitle" => "Campaign Logs",
+                    "organisation" => $organisation,
+                    "user" => $currUser
+                ]);
+            })
+            ->name('campaign-logs');
 
          /*
         ==============================

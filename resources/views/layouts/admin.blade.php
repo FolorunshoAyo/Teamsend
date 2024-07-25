@@ -180,12 +180,12 @@
       <!-- Necessary Modals -->
     </div>
     @livewireScripts
-    <!-- Global Admin Scripts -->
-    <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
-    <!-- End Global Admin Herobar -->
     <!-- Page Specific Scripts -->
     @yield('page-script')
     <!-- End Page Specific Scripts -->
+    <!-- Global Admin Scripts -->
+    <script type="text/javascript" src="{{asset('js/main.js')}}"></script>
+    <!-- End Global Admin Herobar -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.3.67/css/materialdesignicons.min.css">
 </body>
 </html>

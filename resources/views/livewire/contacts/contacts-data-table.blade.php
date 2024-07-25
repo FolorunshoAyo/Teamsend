@@ -136,43 +136,71 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $user = Auth::user();
-                        @endphp
-                        @foreach ($contacts as $contact)
-                            <tr wire:key="{{ $contact->id }}">
-                                <td class="checkbox-cell">   
-                                    <label class="checkbox" wire:click="toggleSelected">
-                                        <input type="checkbox" wire:model="selected" value="{{ $contact->id }}">
-                                        <span class="check"></span>
-                                    </label>
-                                </td>
-                                <td class="image-cell">
-                                    <div class="image">
-                                        <img src="{{ asset('images/avatar.svg') }}" class="rounded-full" />
-                                    </div>
-                                </td>
-                                <td data-label="User">{{ $contact->last_name . ' ' . $contact->first_name }}</td>
-                                <td data-label="Email">{{ $contact->email }}</td>
-                                <td data-label="Phone Number">{{ $contact->country_code . ' ' . $contact->phone }}</td>
-                                <td data-label="Created By">
-                                    {{ $contact->userOrganisation->user->id !== $user->id ? $contact->userOrganisation->user->first_name . ' ' . $contact->userOrganisation->user->last_name : 'Me' }}
-                                </td>
-                                <td class="actions-cell">
-                                    <div class="buttons right nowrap">
-                                        <button class="favourite-btn {{ $contact->is_favourite ? 'is-favourite' : '' }}"
-                                            wire:click="setToFavourite('{{ $contact->id }}')">
-                                            <span class="icon"><i class="mdi mdi-star-outline mdi-24px"></i></span>
-                                        </button>
-                                        <button class="button small light"
-                                            wire:click="openContactEditModal('{{ $contact->id }}')">
-                                            <span class="icon"><i
-                                                    class="mdi mdi-square-edit-outline mdi-24px"></i></span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                        @if($isLoading)
+                            @foreach (range(1, 7) as $index)
+                                <tr>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                    <td class="border px-4 py-2">
+                                    <div class="h-4 bg-gray-200 animate-pulse rounded"></div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            @php
+                                $user = Auth::user();
+                            @endphp
+                            @foreach ($contacts as $contact)
+                                <tr wire:key="{{ $contact->id }}">
+                                    <td class="checkbox-cell">   
+                                        <label class="checkbox" wire:click="toggleSelected">
+                                            <input type="checkbox" wire:model="selected" value="{{ $contact->id }}">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td class="image-cell">
+                                        <div class="image">
+                                            <img src="{{ asset('images/avatar.svg') }}" class="rounded-full" />
+                                        </div>
+                                    </td>
+                                    <td data-label="User">{{ $contact->last_name . ' ' . $contact->first_name }}</td>
+                                    <td data-label="Email">{{ $contact->email }}</td>
+                                    <td data-label="Phone Number">{{ $contact->country_code . ' ' . $contact->phone }}</td>
+                                    <td data-label="Created By">
+                                        {{ $contact->userOrganisation->user->id !== $user->id ? $contact->userOrganisation->user->first_name . ' ' . $contact->userOrganisation->user->last_name : 'Me' }}
+                                    </td>
+                                    <td class="actions-cell">
+                                        <div class="buttons right nowrap">
+                                            <button class="favourite-btn {{ $contact->is_favourite ? 'is-favourite' : '' }}"
+                                                wire:click="setToFavourite('{{ $contact->id }}')">
+                                                <span class="icon"><i class="mdi mdi-star-outline mdi-24px"></i></span>
+                                            </button>
+                                            <button class="button small light"
+                                                wire:click="openContactEditModal('{{ $contact->id }}')">
+                                                <span class="icon"><i
+                                                        class="mdi mdi-square-edit-outline mdi-24px"></i></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
                 <!-- Table pagination -->

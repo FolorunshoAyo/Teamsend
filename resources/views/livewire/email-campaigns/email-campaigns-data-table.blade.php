@@ -1,6 +1,6 @@
 <section class="section main-section">
     <div class="p-6 bg-white shadow-sm rounded-sm">
-        <div class="my-6 flex flex-col items-center sm:justify-between sm:flex-row gap-4">
+        <div class="my-2 flex flex-col items-center sm:justify-between sm:flex-row gap-4">
             <a class="button" href="{{ route('org-admin.new-email-campaign', ['organisation' => "$org_name"]) }}">
                 <i class="mdi mdi-plus"></i>
                 Add New Campaign
@@ -12,6 +12,27 @@
                 </div>
             </div>
         </div>
+        <div class="mb-2 rounded-md inline-block p-4" role="group">
+            <div class="mr-2 mb-2 font-medium">Filter by: </div>
+            <div class="filter-button-group inline-flex items-center">
+                <button type="button" wire:click="applyFilter('all')" class="inline-flex items-center px-4 py-2 text-sm font-medium {{ $selectedFilter === 'all' ? 'bg-gray-900 text-white' : 'text-gray-900 bg-transparent' }} border border-r-0 border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                    <i class="mdi mdi-view-list-outline mr-1"></i>
+                    All
+                </button>
+                <button type="button" wire:click="applyFilter('sent')" class="inline-flex items-center px-4 py-2 text-sm font-medium {{ $selectedFilter === 'sent' ? 'bg-green-900 text-white' : 'text-green-900 bg-transparent' }} border border-r-0 border-green-900 rounded-e-lg hover:bg-green-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-green-500 focus:bg-green-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-green-700 dark:focus:bg-green-700">
+                  <i class="mdi mdi-check-circle-outline mr-1"></i>
+                  Sent
+                </button>
+                <button type="button" wire:click="applyFilter('undelivered')" class="inline-flex items-center px-4 py-2 text-sm font-medium {{ $selectedFilter === 'undelivered' ? 'bg-yellow-900 text-white' : 'text-yellow-900 bg-transparent' }} border border-yellow-900 rounded-s-lg hover:bg-yellow-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-yellow-500 focus:bg-yellow-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-yellow-700 dark:focus:bg-yellow-700">
+                  <i class="mdi mdi-cancel mr-1"></i>
+                  Undelivered
+                </button>
+                <button type="button" wire:click="applyFilter('scheduled')" class="inline-flex items-center px-4 py-2 text-sm font-medium {{ $selectedFilter === 'scheduled' ? 'bg-blue-900 text-white' : 'text-blue-900 bg-transparent' }} border-t border-b  border-r border-blue-900 hover:bg-blue-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-blue-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-blue-700 dark:focus:bg-blue-700">
+                  <i class="mdi mdi-calendar-clock mr-1"></i>
+                  Schedules
+                </button>
+            </div>
+        </div>
         @if ($campaigns->isEmpty())
             <div class="card empty">
                 <div class="card-content">
@@ -20,7 +41,7 @@
                         ><i class="mdi mdi-emoticon-sad mdi-48px"></i
                         ></span>
                     </div>
-                    <p>Nothing's here…</p>
+                    <p>{{$selectedFilter === "all"? "There is no email campaign created yet" : "There is no $selectedFilter campaign yet"}}</p>
                 </div>
                 <hr />
                 <div class="text-end p-4">
@@ -32,21 +53,6 @@
             </div>
         @else
             <div class="card has-table mb-6">
-                <div class="filter-button-group inline-flex items-center rounded-md shadow-sm p-2" role="group">
-                    <span class="mr-2">Filter by: </span>
-                    <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-green-900 bg-transparent border border-r-0 border-green-900 rounded-e-lg hover:bg-green-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-green-500 focus:bg-green-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-green-700 dark:focus:bg-green-700">
-                      <i class="mdi mdi-check-circle-outline"></i>
-                      Sent
-                    </button>
-                    <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-yellow-900 bg-transparent border border-yellow-900 rounded-s-lg hover:bg-yellow-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-yellow-500 focus:bg-yellow-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-yellow-700 dark:focus:bg-yellow-700">
-                      <i class="mdi mdi-cancel"></i>
-                      Undelivered
-                    </button>
-                    <button type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-900 bg-transparent border-t border-b  border-r border-blue-900 hover:bg-blue-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-blue-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-blue-700 dark:focus:bg-blue-700">
-                      <i class="mdi mdi-calendar-clock"></i>
-                      Schedules
-                    </button>
-                </div>
                 <header class="card-header">
                     <p class="card-header-title">
                         <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
@@ -75,7 +81,6 @@
                     <table class="table-auto">
                         <thead>
                             <tr>
-                                <th></th>
                                 <th>Campaign Name</th>
                                 <th>Sent To (Count)</th>
                                 <th>Template</th>
@@ -93,11 +98,6 @@
                             @endphp
                             @foreach ($campaigns as $campaign)
                             <tr wire:key="{{ $campaign->id }}">
-                                <td class="image-cell">
-                                    <div class="image">
-                                        <img src="{{ asset('images/avatar.svg') }}" class="rounded-full" />
-                                    </div>
-                                </td>
                                 <td data-label="Campaign Name">
                                     <a class="font-medium whitespace-no-wrap inline-block" href="javascript:void(0)">
                                         {{ $campaign->campaign_name }}

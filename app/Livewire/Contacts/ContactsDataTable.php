@@ -25,6 +25,7 @@ class ContactsDataTable extends Component
     public $is_trashed = "0";
     public $activeFilter = null;
     public $org_id; 
+    public $isLoading = true;
 
     public function mount($orgId){
         $this->org_id = $orgId;
@@ -52,6 +53,8 @@ class ContactsDataTable extends Component
 
         $contacts = "";         
 
+        $this->isLoading = true;
+
         if($this->activeFilter === null){
             // Query to get all contacts
             $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
@@ -65,6 +68,8 @@ class ContactsDataTable extends Component
             ->with('userOrganisation.user')
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
+
+            $this->isLoading = false;
         }elseif($this->activeFilter === "favourite"){
             // Query to get favourite contacts
             $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
@@ -80,6 +85,7 @@ class ContactsDataTable extends Component
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
 
+            $this->isLoading = false;
         }elseif($this->activeFilter === "blocked"){
             // Query to get blocked contacts
             $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
@@ -94,6 +100,8 @@ class ContactsDataTable extends Component
             ->with('userOrganisation.user')
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
+
+            $this->isLoading = false;
         }else{
             // Query to get trashed contacts
             $contacts = Contact::whereHas('userOrganisation', function ($query) use ($orgId) {
@@ -108,6 +116,8 @@ class ContactsDataTable extends Component
             ->with('userOrganisation.user')
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
+
+            $this->isLoading = false;
         }
 
         return view('livewire.contacts.contacts-data-table', [
