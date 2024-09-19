@@ -23,7 +23,8 @@ use App\Http\Controllers\EmailTemplateImageController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect('/register');
 });
 
 Route::get('/mail-sent', function () {
